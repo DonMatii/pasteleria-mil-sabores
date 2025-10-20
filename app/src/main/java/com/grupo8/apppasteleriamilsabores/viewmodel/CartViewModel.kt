@@ -2,17 +2,21 @@ package com.grupo8.apppasteleriamilsabores.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.grupo8.apppasteleriamilsabores.data.model.CartItem
+import com.grupo8.apppasteleriamilsabores.data.model.CartLineUi
 import com.grupo8.apppasteleriamilsabores.data.repo.MilSaboresRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-data class CartUi(val items: List<CartItem> = emptyList())
+data class CartUi(
+    val lines: List<CartLineUi> = emptyList(),
+    val total: Double = 0.0
+)
 
 class CartViewModel(private val repo: MilSaboresRepository): ViewModel() {
-    val ui: StateFlow<CartUi> = repo.cart().map { CartUi(it) }.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), CartUi()
-    )
+
+    val ui: StateFlow<CartUi> = repo.cartLines()
+        .map { lines -> CartUi(lines = lines, total = lines.sumOf { it.subtotal }) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CartUi())
 
     fun add(productId: Long, qty: Int = 1) {
         viewModelScope.launch { repo.addToCart(productId, qty) }
@@ -26,3 +30,5 @@ class CartViewModel(private val repo: MilSaboresRepository): ViewModel() {
         viewModelScope.launch { repo.clearCart() }
     }
 }
+
+

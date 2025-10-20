@@ -49,7 +49,7 @@ fun MilSaboresNav(
             CartScreen(
                 currentRoute = currentRoute,
                 onNavigate   = { route -> if (route != currentRoute) nav.navigate(route) },
-                items        = ui.items,
+                lines        = ui.lines,       // 👈 antes: items = ui.items
                 onRemove     = { id -> cartVm.remove(id) },
                 onClear      = { cartVm.clear() }
             )

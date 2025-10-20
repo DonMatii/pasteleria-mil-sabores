@@ -3,6 +3,8 @@ package com.grupo8.apppasteleriamilsabores.data.repo
 import com.grupo8.apppasteleriamilsabores.data.local.*
 import com.grupo8.apppasteleriamilsabores.data.model.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 
 class MilSaboresRepository(
     private val userDao: UserDao,
@@ -23,9 +25,38 @@ class MilSaboresRepository(
     suspend fun seedProducts(list: List<Productos>) = productDao.upsertAll(list)
     suspend fun clearAllProducts(): Int = productDao.clearAll()
 
-    // Cart
-    fun cart(): Flow<List<CartItem>> = cartDao.all()
-    suspend fun addToCart(productId: Long, qty: Int) = cartDao.upsert(CartItem(productoId = productId ,cantidadProds = qty))
+    // 🛒 Carrito
+    // 1) Agregar sumando cantidades si el producto ya existe
+    suspend fun addToCart(productId: Long, qty: Int) {
+        val existing = cartDao.findByProduct(productId)
+        if (existing != null) {
+            cartDao.incQty(existing.id, qty)
+        } else {
+            cartDao.insert(CartItem(productoId = productId, cantidadProds = qty))
+        }
+    }
+
     suspend fun removeCartItem(id: Long) = cartDao.remove(id)
     suspend fun clearCart() = cartDao.clear()
+
+    // 2) "JOIN" en memoria: combinamos carrito + productos para mostrar nombre/precio/subtotal
+    fun cartLines(): Flow<List<CartLineUi>> =
+        combine(cartDao.all(), productDao.all()) { cartItems, products ->
+            val productsById = products.associateBy { it.idProd }
+            cartItems.map { ci ->
+                val p = productsById[ci.productoId]
+                val nombre = p?.nombreProd ?: "Producto #${ci.productoId}"
+                val precio = p?.precioProd ?: 0.0
+                CartLineUi(
+                    idProd = ci.id,
+                    productId = ci.productoId,
+                    nombreProd = nombre,
+                    cantidadProd = ci.cantidadProds,
+                    precioProd = precio,
+                    subtotal = precio * ci.cantidadProds
+                )
+            }
+        }
 }
+
+
