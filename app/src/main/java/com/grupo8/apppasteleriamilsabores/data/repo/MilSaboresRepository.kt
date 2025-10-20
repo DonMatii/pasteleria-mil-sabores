@@ -16,21 +16,16 @@ class MilSaboresRepository(
     suspend fun findUserByEmail(email: String) = userDao.findByEmail(email)
     fun users(): Flow<List<User>> = userDao.all()
 
-    // Products
-    suspend fun seedProducts(productos: List<Productos>) = productDao.upsertAll(productos)
+    // Productos
     fun products(): Flow<List<Productos>> = productDao.all()
     fun featured(): Flow<List<Productos>> = productDao.featured()
-
     suspend fun productsCount(): Int = productDao.count()
-    suspend fun seedIfEmpty(products: List<Productos>) {
-        if (productDao.count() == 0) {
-            productDao.upsertAll(products)
-        }
-    }
+    suspend fun seedProducts(list: List<Productos>) = productDao.upsertAll(list)
+    suspend fun clearAllProducts(): Int = productDao.clearAll()
 
     // Cart
     fun cart(): Flow<List<CartItem>> = cartDao.all()
-    suspend fun addToCart(productId: Long, qty: Int) = cartDao.upsert(CartItem(productoId = productId, cantidadProds = qty))
+    suspend fun addToCart(productId: Long, qty: Int) = cartDao.upsert(CartItem(productoId = productId ,cantidadProds = qty))
     suspend fun removeCartItem(id: Long) = cartDao.remove(id)
     suspend fun clearCart() = cartDao.clear()
 }

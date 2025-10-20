@@ -16,8 +16,8 @@ fun MilTopBar(
     TopAppBar(
         title = { Text(title) },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            titleContentColor = MaterialTheme.colorScheme.primary
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary
         ),
         actions = {
             if (onCart != null) {

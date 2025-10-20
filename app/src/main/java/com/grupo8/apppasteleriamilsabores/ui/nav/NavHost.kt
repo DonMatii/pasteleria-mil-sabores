@@ -17,30 +17,30 @@ fun MilSaboresNav(
     cartVm: CartViewModel
 ) {
     val nav = rememberNavController()
-
-    // Productos del Store (para catálogo/destacados)
-    val products by storeVm.products.collectAsState()
-
-    // Ruta actual para que el BottomNav sepa qué ítem resaltar
     val currentBackStackEntry = nav.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry.value?.destination?.route ?: Route.Home.path
+
+    val cartUi by cartVm.ui.collectAsState()
+    val products by storeVm.products.collectAsState()
+    val destacados by storeVm.featured.collectAsState()
 
     NavHost(navController = nav, startDestination = Route.Home.path) {
 
         composable(Route.Home.path) {
             HomeScreen(
                 currentRoute = currentRoute,
-                onNavigate   = { route -> if (route != currentRoute) nav.navigate(route) },
-                onGoCatalog  = { nav.navigate(Route.Catalogo.path) }
+                onNavigate = { route -> if (route != currentRoute) nav.navigate(route) },
+                onGoCatalog = { nav.navigate(Route.Catalogo.path) },
+                destacados = destacados                    // 👈 NUEVO
             )
         }
 
         composable(Route.Catalogo.path) {
             CatalogScreen(
                 currentRoute = currentRoute,
-                onNavigate   = { route -> if (route != currentRoute) nav.navigate(route) },
-                products     = products,
-                onAddToCart  = { productId -> cartVm.add(productId) }
+                onNavigate = { route -> if (route != currentRoute) nav.navigate(route) },
+                products = products,
+                onAddToCart = { id -> cartVm.add(id) }
             )
         }
 
@@ -64,7 +64,7 @@ fun MilSaboresNav(
             )
         }
 
-        composable("registro") {
+        composable(Route.Registro.path) {
             RegisterScreen(
                 currentRoute = currentRoute,
                 onNavigate = { route -> if (route != currentRoute) nav.navigate(route) },
@@ -77,5 +77,6 @@ fun MilSaboresNav(
             )
         }
     }
+
 }
 
