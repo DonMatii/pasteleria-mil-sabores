@@ -9,5 +9,5 @@ data class User(
     val userName: String,
     val apUser: String,
     val emailUser: String,
-    val passwordUser: String // store a hash, not plain text
+    val passwordUser: String
 )

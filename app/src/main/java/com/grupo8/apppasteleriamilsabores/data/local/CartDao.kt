@@ -13,11 +13,11 @@ interface CartDao {
     @Query("SELECT * FROM cart_items")
     fun all(): Flow<List<CartItem>>
 
-    // 👉 Busca si ya hay una línea con ese producto
+    // En caso de agregar más cantidades de un item
     @Query("SELECT * FROM cart_items WHERE productoId = :productId LIMIT 1")
     suspend fun findByProduct(productId: Long): CartItem?
 
-    // 👉 Incrementa cantidad
+    // Acción incremental
     @Query("UPDATE cart_items SET cantidadProds = cantidadProds + :delta WHERE id = :id")
     suspend fun incQty(id: Long, delta: Int)
 

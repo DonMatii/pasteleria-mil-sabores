@@ -15,11 +15,10 @@ class StoreViewModel(private val repo: MilSaboresRepository): ViewModel() {
     val featured: StateFlow<List<Productos>> = repo.featured()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    // (si todavía tienes un seed manual aquí, elimínalo o haz que consulte repo.productsCount())
     fun seedIfEmpty() {
         viewModelScope.launch {
             if (repo.productsCount() == 0) {
-                // opcional: puedes no hacer nada porque se sembrará desde MainActivity con JSON
+
             }
         }
     }

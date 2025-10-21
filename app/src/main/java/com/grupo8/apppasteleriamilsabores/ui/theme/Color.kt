@@ -11,7 +11,6 @@ val CafeOscuro  = Color(0xFF5D4037) // #5D4037
 val Marron      = Color(0xFF8B4513) // #8B4513
 val Rosa        = Color(0xFFFFC0CB) // #FFC0CB
 
-// Esquema claro (Material 3)
 val LightColors = lightColorScheme(
     primary      = CafeOscuro,
     onPrimary    = Color.White,
@@ -24,7 +23,6 @@ val LightColors = lightColorScheme(
     onSurface    = Color(0xFF1C1B1F)
 )
 
-// Esquema oscuro (Material 3)
 val DarkColors = darkColorScheme(
     primary      = Durazno,
     onPrimary    = Color.Black,

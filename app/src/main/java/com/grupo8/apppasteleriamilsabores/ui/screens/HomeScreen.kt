@@ -17,7 +17,7 @@ fun HomeScreen(
     currentRoute: String,
     onNavigate: (String) -> Unit,
     onGoCatalog: () -> Unit,
-    destacados: List<Productos>           // 👈 NUEVO
+    destacados: List<Productos>
 ) {
     Scaffold(
         topBar = {MilTopBar(title = "Pastelería Mil Sabores", onCart = { onNavigate("carrito") }) },
@@ -42,15 +42,11 @@ fun HomeScreen(
             } else {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     items(destacados) { p ->
-                        // versión compacta de ProductCard (o usa la misma con width fijo)
                         Card(
                             shape = MaterialTheme.shapes.large,
                             modifier = Modifier.width(240.dp)
                         ) {
                             Column(Modifier.padding(12.dp)) {
-                                // Puedes reutilizar tu ProductCard si quieres:
-                                // ProductCard(p = p, onAddToCart = { /* no agrega desde home */ })
-                                // O una mini-card propia:
                                 ProductCard(p = p, onAddToCart = { /* opcional */ })
                             }
                         }

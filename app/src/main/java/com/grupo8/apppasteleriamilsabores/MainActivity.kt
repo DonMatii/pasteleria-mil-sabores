@@ -21,9 +21,8 @@ import kotlinx.serialization.decodeFromString
 
 suspend fun seedFromJsonIfEmpty(ctx: Context, repo: MilSaboresRepository) {
     if (repo.productsCount() > 0) return
-    // 👇 OJO: que exista res/raw/productos.json
+    // Lectura archivo .json
     val json = ctx.resources.openRawResource(R.raw.productos).bufferedReader().use { it.readText() }
-    // Requiere plugin + dependency de kotlinx.serialization
     val items: List<Productos> = Json { ignoreUnknownKeys = true }
         .decodeFromString<List<Productos>>(json)
         .map { it.copy(idProd = 0) }
@@ -59,8 +58,7 @@ class MainActivity : ComponentActivity() {
 
             MilSaboresTheme {
                 LaunchedEffect(Unit) {
-                    // si quieres limpiar duplicados una sola vez:
-                    //repo.clearAllProducts()
+                    //repo.clearAllProducts() -> borrado de items duplicados en catalogo
                     seedFromJsonIfEmpty(applicationContext, repo)
                 }
 

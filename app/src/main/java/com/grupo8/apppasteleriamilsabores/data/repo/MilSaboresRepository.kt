@@ -25,8 +25,7 @@ class MilSaboresRepository(
     suspend fun seedProducts(list: List<Productos>) = productDao.upsertAll(list)
     suspend fun clearAllProducts(): Int = productDao.clearAll()
 
-    // 🛒 Carrito
-    // 1) Agregar sumando cantidades si el producto ya existe
+    // Carrito
     suspend fun addToCart(productId: Long, qty: Int) {
         val existing = cartDao.findByProduct(productId)
         if (existing != null) {
@@ -39,7 +38,7 @@ class MilSaboresRepository(
     suspend fun removeCartItem(id: Long) = cartDao.remove(id)
     suspend fun clearCart() = cartDao.clear()
 
-    // 2) "JOIN" en memoria: combinamos carrito + productos para mostrar nombre/precio/subtotal
+    // Funcion de detalles de producto en carrito
     fun cartLines(): Flow<List<CartLineUi>> =
         combine(cartDao.all(), productDao.all()) { cartItems, products ->
             val productsById = products.associateBy { it.idProd }

@@ -31,7 +31,7 @@ fun MilSaboresNav(
                 currentRoute = currentRoute,
                 onNavigate = { route -> if (route != currentRoute) nav.navigate(route) },
                 onGoCatalog = { nav.navigate(Route.Catalogo.path) },
-                destacados = destacados                    // 👈 NUEVO
+                destacados = destacados
             )
         }
 
@@ -49,7 +49,7 @@ fun MilSaboresNav(
             CartScreen(
                 currentRoute = currentRoute,
                 onNavigate   = { route -> if (route != currentRoute) nav.navigate(route) },
-                lines        = ui.lines,       // 👈 antes: items = ui.items
+                lines        = ui.lines,
                 onRemove     = { id -> cartVm.remove(id) },
                 onClear      = { cartVm.clear() }
             )
@@ -70,8 +70,7 @@ fun MilSaboresNav(
                 onNavigate = { route -> if (route != currentRoute) nav.navigate(route) },
                 vm = authVm,
                 onRegistered = {
-                    // tras registro, vuelve a login o directo a home
-                    nav.popBackStack()    // opcional
+                    nav.popBackStack()
                     nav.navigate("login")
                 }
             )

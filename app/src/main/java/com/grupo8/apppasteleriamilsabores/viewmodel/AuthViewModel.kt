@@ -20,7 +20,6 @@ class AuthViewModel(private val repo: MilSaboresRepository): ViewModel() {
 
     fun register(nombre: String, apellido: String ,email: String, password: String, onDone: () -> Unit = {}) {
         viewModelScope.launch {
-            // si guardas hash, aplica aquí (por ahora plano)
             repo.register(nombre, apellido, email, password)
             onDone()
         }
