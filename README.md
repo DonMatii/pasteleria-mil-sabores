@@ -1,98 +1,120 @@
-# AppPasteleriaMilSabores_Grupo8
+# 🍰 App Pastelería Mil Sabores - Grupo 8
 
-Aplicación móvil desarrollada en Android Studio con Kotlin y Jetpack Compose, siguiendo la arquitectura MVVM. Este proyecto corresponde a la asignatura de Desarrollo de Aplicaciones Móviles y tiene como objetivo implementar una solución que permita gestionar y visualizar información relacionada con la pastelería Mil Sabores.
+Aplicación móvil desarrollada en Android para la gestión y visualización de productos de pastelería. Proyecto correspondiente a la Evaluación Parcial 4 de Desarrollo de Aplicaciones Móviles.
 
-## Descripción
+## 📋 Descripción del Proyecto
 
-La aplicación presenta una interfaz sencilla e intuitiva, diseñada para ofrecer una experiencia de usuario fluida. En esta versión se ha implementado:
+Solución móvil integral para la pastelería "Mil Sabores" que permite a los usuarios explorar el catálogo de productos, gestionar un carrito de compras y acceder mediante sistema de autenticación seguro.
 
-- **Organización en paquetes**: model, viewmodel, ui, ui.theme, data.local, data.repo
-- **Pantallas principales**: Home, Catálogo, Carrito, Login y Registro
-- **Base de datos local**: Room Database para persistencia de datos
-- **Animaciones fluidas**: Mejora de experiencia de usuario
-- **Configuración básica de Firebase**: Preparada para integración futura
+## 🛠 Tecnologías Implementadas
 
-## ✨ Animaciones Implementadas
-
-1. **Fade-in suave**: Las tarjetas de productos aparecen gradualmente (800ms)
-2. **Pulsación de botones**: Efecto táctil al agregar productos al carrito
-3. **Toast de confirmación pastel**: Notificación estilo "dulce" al agregar items
-
-## Tecnologías y Herramientas
-
-- **Lenguaje**: Kotlin
-- **Framework UI**: Jetpack Compose
-- **Arquitectura**: MVVM (Model - View - ViewModel)
-- **Base de datos**: Room Database
+- **Lenguaje de programación**: Kotlin
+- **Interfaz de usuario**: Jetpack Compose
+- **Diseño**: Material Design 3
+- **Arquitectura**: MVVM (Model-View-ViewModel)
+- **Base de datos local**: Room Database
+- **Autenticación**: Firebase Authentication
 - **Navegación**: Navigation Component
-- **Animaciones**: Compose Animation APIs
-- **Entorno de desarrollo**: Android Studio
-- **Control de versiones**: Git y GitHub
+- **Gestión de estado**: StateFlows + ViewModel
 
-## Estructura del Proyecto
-app/src/main/java/com/grupo8/apppasteleriamilsabores
-│
-├── data
-│ ├── local # Room Database, DAOs y entidades
-│ └── repo # Repositorio y lógica de datos
-│
-├── model # Clases de datos y modelos
-├── viewmodel # Lógica de presentación y manejo de estado
-├── ui # Pantallas y componentes visuales
-│ ├── components # Componentes reutilizables
-│ ├── screens # Pantallas de la aplicación
-│ ├── nav # Navegación y rutas
-│ └── theme # Colores, tipografía y estilos globales
-│
-└── MainActivity.kt
+## 🏗 Arquitectura del Proyecto
+app/src/main/java/com/grupo8/apppasteleriamilsabores/
+├── data/
+│ ├── local/ # Room Database y DAOs
+│ ├── model/ # Modelos de datos
+│ └── repo/ # Patrón Repository
+├── viewmodel/ # ViewModels de la aplicación
+├── ui/
+│ ├── screens/ # Pantallas principales
+│ ├── components/ # Componentes reutilizables
+│ ├── nav/ # Configuración de navegación
+│ └── theme/ # Tema de la aplicación
+└── MainActivity.kt # Actividad principal
 
 text
 
-## Funcionalidades Actuales
+## ⚡ Funcionalidades Principales
 
-- ✅ Navegación entre pantallas
-- ✅ Catálogo de productos con base de datos local
-- ✅ Carrito de compras con persistencia
-- ✅ Sistema de autenticación (registro/login)
-- ✅ Animaciones fluidas y atractivas
-- ✅ Diseño responsivo con Material Design 3
-- ✅ Tema personalizado con colores pastel
+### 🔐 Sistema de Autenticación
+- Autenticación con email y contraseña mediante Firebase Auth
+- Registro de nuevos usuarios con validaciones
+- Modo invitado para acceso temporal
+- Validaciones de formularios en tiempo real
+- Manejo de estados de carga y errores
 
-## Ejecución del Proyecto
+### 📦 Gestión de Productos
+- Catálogo completo de productos
+- Sección de productos destacados
+- Persistencia local con Room Database
+- Visualización en grid responsivo
+
+### 🛒 Carrito de Compras
+- Agregar y eliminar productos del carrito
+- Cálculo automático de totales
+- Persistencia de datos del carrito
+- Funcionalidad para vaciar carrito completo
+
+### 🎨 Experiencia de Usuario
+- Navegación fluida entre pantallas
+- Implementación de Material Design 3
+- Animaciones y transiciones fluidas
+- Tema personalizado con paleta de colores
+- Feedback visual mediante diálogos y notificaciones
+
+## 🔄 Flujos de Autenticación
+
+1. **Autenticación tradicional**: Email y contraseña con Firebase Auth
+2. **Registro de usuario**: Creación de nueva cuenta con validaciones
+3. **Modo invitado**: Acceso temporal sin requerir registro
+
+### ✅ Validaciones Implementadas
+- Validación de formato de email
+- Contraseña mínima de 6 caracteres
+- Verificación de campos requeridos
+- Mensajes de error específicos y descriptivos
+
+## 📊 Gestión de Estado
+
+La aplicación utiliza ViewModels para la gestión del estado:
+
+- **AuthViewModel**: Controla el estado de autenticación y flujos de login/registro
+- **StoreViewModel**: Gestiona el catálogo y productos destacados
+- **CartViewModel**: Administra el estado del carrito de compras
+
+## 🚀 Instrucciones de Ejecución
 
 1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/DonMatii/pasteleria-mil-sabores.git
-Abrir el proyecto en Android Studio.
 
-Configurar un dispositivo virtual en Device Manager.
+git clone https://github.com/DonMatii/pasteleria-mil-sabores.git
 
-Ejecutar la aplicación con el botón Run.
+2. Abrir el proyecto en Android Studio
 
-Integrantes del Grupo 8
-Matías Suazo
+3. Configurar dispositivo virtual o conectar dispositivo físico
 
-Álvaro Chávez
+4. Ejecutar la aplicación
 
-Estado del Proyecto
-Versión funcional con características completas:
+## 📈 Estado de Desarrollo
+**✅ Funcionalidades Completadas**
+- Implementación de Material Design 3
+- Validación de formularios
+- Sistema de navegación
+- Gestión de estado con ViewModel
+- Almacenamiento local con Room
+- Integración con Firebase Authentication
+- Arquitectura preparada para integración con microservicios
 
-✅ Estructura MVVM completa
+## 🔄 Próximas Implementaciones
+- Pruebas unitarias
+- Generación de APK firmado
+- Documentación técnica completa
+- Integración con backend Spring Boot en AWS EC2
+- Sistema de gestión de pedidos
 
-✅ Navegación entre pantallas implementada
+## 👥 Integrantes del Proyecto
+**Matías Suazo** - Desarrollo móvil & experiencia de usuario
+Enfocado en crear una interfaz intuitiva y funcional que haga la experiencia de compra tan dulce como nuestros productos.
 
-✅ Base de datos local con Room
+**Álvaro Chávez** - Backend & desarrollo web
+Responsable de la infraestructura que soporta nuestra aplicación y la experiencia web complementaria.
 
-✅ Sistema de carrito de compras
-
-✅ Autenticación de usuarios
-
-✅ Animaciones mejoradas
-
-✅ Configuración Firebase lista
-
-Próximas mejoras:
-
-Integración con Firebase Authentication
-
-Sync con Cloud Firestore
+**Proyecto académico - Evaluación Parcial 3 y examen - Desarrollo de Aplicaciones Móviles**

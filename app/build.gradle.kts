@@ -38,6 +38,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+        // 🔥 AGREGAR ESTO PARA SOLUCIONAR KAPT:
+        freeCompilerArgs = freeCompilerArgs + listOf(
+            "-Xjvm-default=all",
+        )
     }
     buildFeatures {
         compose = true
@@ -66,6 +70,15 @@ dependencies {
 
     // Importación de Firebase BOM
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+
+    // VERSIÓN EXPLÍCITA para evitar errores
+    implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
+    implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
+
+    // 🔥 RETROFIT - VERSIONES COMPATIBLES:
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
