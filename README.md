@@ -3,7 +3,7 @@
 Aplicación móvil desarrollada en Android para la gestión y visualización de productos de pastelería. Proyecto correspondiente a la Evaluación N°4 de Desarrollo de Aplicaciones Móviles.
 
 **📋 Descripción del Proyecto**
-Solución móvil integral para la pastelería "Mil Sabores" que permite a los usuarios explorar el catálogo de productos, gestionar un carrito de compras y acceder mediante sistema de autenticación seguro.
+Solución móvil integral para la pastelería "Mil Sabores" que permite a los usuarios explorar el catálogo de productos, gestionar un carrito de compras, realizar pedidos reales y contactar con la pastelería mediante sistema de autenticación seguro.
 
 ## 🏆 Estado del Proyecto
 
@@ -12,6 +12,10 @@ Solución móvil integral para la pastelería "Mil Sabores" que permite a los us
 **✅ Código Optimizado - Corrección de warnings y mejoras de calidad**
 
 **✅ Suite de Testing Profesional - Configuración con Mockito y Corrutinas**
+
+**✅ Sistema de Compras Real - Órdenes guardadas en Firestore**
+
+**✅ Sistema de Contacto Funcional - Mensajes en Firestore**
 
 # 📊 Métricas de Calidad
 
@@ -23,9 +27,11 @@ Solución móvil integral para la pastelería "Mil Sabores" que permite a los us
 
 **✅ Cobertura: AuthViewModel + CartViewModel**
 
+**✅ Persistencia real: Órdenes y mensajes en Firestore**
+
 # 🛠 Tecnologías Implementadas
 
-**Lenguaje de programación:** Kotlin**
+**Lenguaje de programación:** Kotlin
 
 **Interfaz de usuario:** Jetpack Compose
 
@@ -34,6 +40,8 @@ Solución móvil integral para la pastelería "Mil Sabores" que permite a los us
 **Arquitectura:** MVVM (Model-View-ViewModel)
 
 **Base de datos local:** Room Database
+
+**Base de datos en la nube:** Firebase Firestore
 
 **Autenticación:** Firebase Authentication
 
@@ -49,14 +57,14 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 ├── data/
 │   ├── local/           # Room Database y DAOs
-│   ├── model/           # Modelos de datos
+│   ├── model/           # Modelos de datos (Productos, CartLineUi, FirestoreOrder)
 │   └── repo/            # Patrón Repository
-├── viewmodel/           # ViewModels de la aplicación
+├── viewmodel/           # ViewModels de la aplicación (Auth, Store, Cart, Contact)
 ├── ui/
-│   ├── screens/         # Pantallas principales
-│   ├── components/      # Componentes reutilizables  
-│   ├── nav/            # Configuración de navegación
-│   └── theme/          # Tema de la aplicación
+│   ├── screens/         # Pantallas principales (Home, Login, Register, Catalog, Cart, Contact)
+│   ├── components/      # Componentes reutilizables (MilTopBar, MilBottomNav, ProductCard)
+│   ├── nav/            # Configuración de navegación (NavHost, Routes)
+│   └── theme/          # Tema de la aplicación (colores corporativos)
 ├── test/               # 🧪 PRUEBAS UNITARIAS
 │   └── viewmodel/
 │       ├── AuthViewModelTest.kt
@@ -65,60 +73,75 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 # ⚡ Funcionalidades Principales
 
-**🔐 Sistema de Autenticación con email y contraseña mediante Firebase Auth**
+**🔐 Sistema de Autenticación** con email y contraseña mediante Firebase Auth
 
-**Registro de nuevos usuarios con validaciones**
+**👤 Registro de nuevos usuarios** con validaciones en tiempo real
 
-**Modo invitado para acceso temporal**
+**🎭 Modo invitado** para acceso temporal sin registro
 
-**Validaciones de formularios en tiempo real**
+**🛒 Carrito de compras** con gestión completa de productos
 
-**Manejo de estados de carga y errores**
+**📦 Sistema de órdenes reales** guardadas en Firebase Firestore
 
-### 🎨 **Experiencia de Usuario Mejorada**
-- Interfaz unificada con Material Design 3
-- Colores consistentes en todos los flujos de autenticación
-- Validaciones en tiempo real y mensajes de error descriptivos
-- Navegación fluida entre pantallas
+**📞 Formulario de contacto** con persistencia en Firestore
+
+**🎨 UI/UX profesional** con Material Design 3 y colores corporativos
 
 # 📦 Gestión de Productos
 
-**Catálogo completo de productos**
+**Catálogo completo de productos** con grid responsivo
 
-**Sección de productos destacados**
+**Sección de productos destacados** en pantalla principal
 
-**Persistencia local con Room Database**
+**Persistencia local** con Room Database
 
-**Visualización en grid responsivo**
+**Carga inicial desde JSON** con datos de ejemplo de pastelería
 
-**Carga inicial desde JSON con datos de ejemplo**
+**Agregar al carrito** con un solo clic
 
-# 🛒 Carrito de Compras
+# 🛒 Sistema de Compras Real
 
-**Agregar y eliminar productos del carrito**
+**🛍️ Carrito de compras funcional** con gestión de productos
 
-**Cálculo automático de totales**
+**💰 Cálculo automático de totales** en tiempo real
 
-**Persistencia de datos del carrito**
+**✅ Finalizar compra** con órdenes guardadas en Firestore
 
-**Funcionalidad para vaciar carrito completo**
+**🗑️ Vaciar carrito** completo o eliminar productos individuales
+
+**📧 Asociación de órdenes** con email del usuario
+
+**🆔 IDs únicos** para tracking de pedidos
+
+# 📞 Sistema de Contacto
+
+**📝 Formulario completo** (nombre, apellido, correo, mensaje)
+
+**✅ Validaciones en tiempo real** de campos requeridos
+
+**🔥 Persistencia en Firestore** en colección `contact_messages`
+
+**🎉 Confirmación visual** al usuario después del envío
+
+**📧 Respuesta prometida** al correo del usuario
 
 # 🎨 Experiencia de Usuario
 
-**Navegación fluida entre pantallas**
+**🎯 Navegación fluida** entre 6 pantallas principales
 
-**Implementación de Material Design 3**
+**🎨 Material Design 3** implementado completamente
 
-**Animaciones y transiciones fluidas**
+**🍫 Colores corporativos** (Café Oscuro, Crema Pastel, Rosa)
 
-**Tema personalizado con paleta de colores**
+**📱 Diseño responsivo** para diferentes tamaños de pantalla
 
-**Feedback visual mediante diálogos y notificaciones**
+**💬 Feedback visual inmediato** con diálogos y mensajes
+
+**🔄 Estados de carga** durante procesos asíncronos
 
 ## 🧪 Suite de Pruebas Unitarias
 
-- AuthViewModelTest - 4 Pruebas
-
+### AuthViewModelTest - 4 Pruebas
 **✅ Validación de formato de email correcto/incorrecto**
 
 **✅ Validación de campos vacíos en login**
@@ -127,8 +150,7 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 **✅ Lógica de validación de formularios**
 
-- CartViewModelTest - 6 Pruebas
-
+### CartViewModelTest - 6 Pruebas
 **✅ Agregar productos al carrito**
 
 **✅ Remover productos del carrito**
@@ -149,15 +171,19 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 **Modo invitado:** Acceso temporal sin requerir registro
 
+**Gestión de sesiones:** Logout y cambio entre usuarios
+
 ## ✅ Validaciones Implementadas
 
-**Validación de formato de email**
+**Validación de formato de email** con expresiones regulares
 
-**Contraseña mínima de 6 caracteres**
+**Contraseña mínima de 6 caracteres** para registro
 
-**Verificación de campos requeridos**
+**Verificación de campos requeridos** en todos los formularios
 
-**Mensajes de error específicos y descriptivos**
+**Mensajes de error específicos** y descriptivos para el usuario
+
+**Validación en tiempo real** durante la escritura
 
 ## 📊 Gestión de Estado
 
@@ -167,11 +193,30 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 **StoreViewModel:** Gestiona el catálogo y productos destacados
 
-**CartViewModel:** Administra el estado del carrito de compras
+**CartViewModel:** Administra el estado del carrito de compras y procesamiento de órdenes
+
+**ContactViewModel:** Gestiona el envío y almacenamiento de mensajes de contacto
+
+## 🗄️ Persistencia de Datos
+
+### **Almacenamiento Local (Room):**
+- Productos del catálogo
+- Carrito de compras temporal
+- Datos de usuario local
+
+### **Almacenamiento en la Nube (Firestore):**
+- Órdenes de compra completadas (`orders` collection)
+- Mensajes de contacto (`contact_messages` collection)
+- Usuarios autenticados (Firebase Auth)
+
+### **Autenticación (Firebase Auth):**
+- Registro y login de usuarios
+- Sesiones persistentes
+- Modo invitado anónimo
 
 ## 🚀 Instrucciones de Ejecución
 
-1. Clonar el repositorio:
+1. **Clonar el repositorio:**
 
 git clone https://github.com/DonMatii/pasteleria-mil-sabores.git
 
@@ -183,62 +228,98 @@ git clone https://github.com/DonMatii/pasteleria-mil-sabores.git
 
 4. Generar reporte de tests:
 
-**Los reportes se generan en:** app/build/reports/tests/testDebugUnitTest/index.html
+**Los reportes se generan en:**
+
+app/build/reports/tests/testDebugUnitTest/index.html
 
 5. Ejecutar la aplicación en dispositivo virtual o físico
 
+6. Probar funcionalidades:
+
+- Registrarse o usar modo invitado
+
+- Explorar catálogo y agregar productos al carrito
+
+- Finalizar compra (ver órdenes en Firebase Console)
+
+- Enviar mensaje de contacto (ver mensajes en Firebase Console)
+
 ## 📈 Historial de Desarrollo
 
-- Pruebas Unitarias & Calidad de Código
+**Fase 1 - Base y Autenticación**
 
-**✅ Implementación de 11 pruebas unitarias**
+✅ Sistema de autenticación completo con Firebase Auth
 
-**✅ Configuración de entorno de testing profesional**
+✅ Navegación entre pantallas con Navigation Component
 
-**✅ Mocking de dependencias con Mockito**
+✅ Pruebas unitarias para ViewModels principales
 
-**✅ Testing de corrutinas con Test Dispatchers**
+**Fase 2 - Catálogo y Carrito**
 
-**✅ Corrección de warnings y mejoras de código**
+✅ Catálogo de productos con Room Database
 
-**✅ Optimización de parsing JSON en MainActivity**
+✅ Carrito de compras funcional con gestión completa
 
-- Funcionalidades Principales
+✅ UI/UX profesional con Material Design 3
 
-**✅ Sistema de autenticación completo**
+**Fase 3 - Persistencia Real**
 
-**✅ Gestión de productos y carrito**
+✅ Integración con Firebase Firestore
 
-**✅ Navegación entre pantallas**
+✅ Sistema de órdenes reales guardadas en la nube
 
-**✅ Persistencia de datos local**
+✅ Formulario de contacto con persistencia en Firestore
+
+✅ Colores corporativos aplicados consistentemente
 
 ## 🔄 Próximos Objetivos
 
-**🚀 Próxima Entrega**
+🚀 Para Entrega Final:
 
-**📦 APK Firmado** - Generación de versión release
+- 📦 APK Firmado - Generación de versión release
 
-**📚 Documentación Técnica** - Arquitectura y diagramas
+- 📚 Documentación Técnica - Arquitectura y diagramas
 
-**🔗 Integración Spring Boot** - Cuando el backend esté listo en AWS
+- 🎤 Preparación Defensa - Demostración de funcionalidades
 
-- **Mejoras UI/UX**: Optimización de pantallas principales (Home, Login, Register) con Material Design 3
+## 🔮 Futuras Mejoras:
 
-## 🏗 Dependencias de Testing
+**📋 Historial de pedidos para usuarios registrados**
+
+**📊 Dashboard administrativo en Firebase**
+
+**📧 Notificaciones push de confirmación**
+
+**🔗 Integración Spring Boot cuando backend esté listo**
+
+## 🏗 Dependencias Principales
+
+-  UI y Framework
+
+implementation("androidx.compose.ui:ui")
+implementation("androidx.compose.material3:material3")
+implementation("androidx.navigation:navigation-compose")
+
+- Base de datos
+
+implementation("androidx.room:room-runtime")
+implementation("androidx.room:room-ktx")
+
+- Firebase
+
+implementation("com.google.firebase:firebase-auth-ktx")
+implementation("com.google.firebase:firebase-firestore-ktx")
+
+- Testing
 
 testImplementation("junit:junit:4.13.2")
 testImplementation("org.mockito:mockito-core:5.11.0")
-testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
-testImplementation("androidx.arch.core:core-testing:2.2.0")
 testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
 ## 👥 Integrantes del Proyecto
 
 **Matías Suazo** - Desarrollo móvil & experiencia de usuario
-Enfocado en crear una interfaz intuitiva y funcional que haga la experiencia de compra tan dulce como nuestros productos.
+Enfocado en crear una interfaz intuitiva y funcional que haga la experiencia de compra tan dulce como nuestros productos. Implementación completa de frontend, autenticación, carrito de compras y sistema de contacto.
 
 **Álvaro Chávez** - Backend & desarrollo web
 Responsable de la infraestructura que soporta nuestra aplicación y la experiencia web complementaria.
-
-
