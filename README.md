@@ -17,6 +17,12 @@ Solución móvil integral para la pastelería "Mil Sabores" que permite a los us
 
 **✅ Sistema de Contacto Funcional - Mensajes en Firestore**
 
+**✅ Controles de Cantidad en Carrito - Botones +/- funcionales**
+
+**✅ Control de Autenticación - Solo usuarios autenticados pueden comprar**
+
+**✅ Experiencia de Usuario Mejorada - Navegación intuitiva entre pantallas**
+
 # 📊 Métricas de Calidad
 
 **✅ 11 pruebas unitarias ejecutadas**
@@ -87,6 +93,10 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 **🎨 UI/UX profesional** con Material Design 3 y colores corporativos
 
+**➕➖ Controles de cantidad** en carrito para ajustar productos
+
+**🔒 Control de acceso** para compras solo usuarios autenticados
+
 # 📦 Gestión de Productos
 
 **Catálogo completo de productos** con grid responsivo
@@ -98,6 +108,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 **Carga inicial desde JSON** con datos de ejemplo de pastelería
 
 **Agregar al carrito** con un solo clic
+
+**Vista previa en Home** sin funcionalidad de compra directa
 
 # 🛒 Sistema de Compras Real
 
@@ -112,6 +124,36 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 **📧 Asociación de órdenes** con email del usuario
 
 **🆔 IDs únicos** para tracking de pedidos
+
+**➕➖ Controles de cantidad** para ajustar unidades de productos
+
+**🔒 Protección de compras** solo para usuarios autenticados
+
+# 🔄 Gestión de Cantidades en Carrito
+
+**Botón +** para aumentar cantidad de productos
+
+**Botón -** para disminuir cantidad de productos
+
+**Eliminación automática** cuando cantidad llega a cero
+
+**Actualización en tiempo real** de subtotales y total general
+
+**Persistencia inmediata** en base de datos local
+
+**Sincronización con UI** mediante StateFlows
+
+# 🔐 Control de Autenticación para Compras
+
+**Verificación automática** de estado de autenticación
+
+**Redirección a login** si usuario no autenticado intenta comprar
+
+**Modo invitado** permite navegación pero requiere autenticación para comprar
+
+**Usuarios registrados** acceso completo a todas las funcionalidades
+
+**Protección en navegación** para rutas sensibles
 
 # 📞 Sistema de Contacto
 
@@ -138,6 +180,10 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 **💬 Feedback visual inmediato** con diálogos y mensajes
 
 **🔄 Estados de carga** durante procesos asíncronos
+
+**🏠 Home intuitivo** con productos destacados y redirección al catálogo
+
+**🛒 Carrito mejorado** con controles de cantidad fáciles de usar
 
 ## 🧪 Suite de Pruebas Unitarias
 
@@ -173,6 +219,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 **Gestión de sesiones:** Logout y cambio entre usuarios
 
+**Control de acceso:** Verificación para funcionalidades de compra
+
 ## ✅ Validaciones Implementadas
 
 **Validación de formato de email** con expresiones regulares
@@ -184,6 +232,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 **Mensajes de error específicos** y descriptivos para el usuario
 
 **Validación en tiempo real** durante la escritura
+
+**Control de autenticación** para procesos de compra
 
 ## 📊 Gestión de Estado
 
@@ -203,6 +253,7 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 - Productos del catálogo
 - Carrito de compras temporal
 - Datos de usuario local
+- Cantidades de productos en carrito
 
 ### **Almacenamiento en la Nube (Firestore):**
 - Órdenes de compra completadas (`orders` collection)
@@ -217,6 +268,7 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 ## 🚀 Instrucciones de Ejecución
 
 1. **Clonar el repositorio:**
+
 
 git clone https://github.com/DonMatii/pasteleria-mil-sabores.git
 
@@ -239,6 +291,8 @@ app/build/reports/tests/testDebugUnitTest/index.html
 - Registrarse o usar modo invitado
 
 - Explorar catálogo y agregar productos al carrito
+
+- Ajustar cantidades con botones + y - en el carrito
 
 - Finalizar compra (ver órdenes en Firebase Console)
 
@@ -271,6 +325,16 @@ app/build/reports/tests/testDebugUnitTest/index.html
 ✅ Formulario de contacto con persistencia en Firestore
 
 ✅ Colores corporativos aplicados consistentemente
+
+**Fase 4 - Mejoras de UX y Control**
+
+✅ Controles de cantidad en carrito con botones +/-
+
+✅ Protección de compras para usuarios autenticados
+
+✅ Mejora en navegación entre Home y Catálogo
+
+✅ Optimización de interfaz de usuario
 
 ## 🔄 Próximos Objetivos
 
