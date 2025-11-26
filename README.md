@@ -75,6 +75,12 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 **Manejo de estados de carga y errores**
 
+### 🎨 **Experiencia de Usuario Mejorada**
+- Interfaz unificada con Material Design 3
+- Colores consistentes en todos los flujos de autenticación
+- Validaciones en tiempo real y mensajes de error descriptivos
+- Navegación fluida entre pantallas
+
 # 📦 Gestión de Productos
 
 **Catálogo completo de productos**
@@ -216,6 +222,8 @@ git clone https://github.com/DonMatii/pasteleria-mil-sabores.git
 **📚 Documentación Técnica** - Arquitectura y diagramas
 
 **🔗 Integración Spring Boot** - Cuando el backend esté listo en AWS
+
+- **Mejoras UI/UX**: Optimización de pantallas principales (Home, Login, Register) con Material Design 3
 
 ## 🏗 Dependencias de Testing
 
