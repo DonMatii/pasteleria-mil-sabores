@@ -23,21 +23,29 @@ fun HomeScreen(
     destacados: List<Productos>,
     authVm: AuthViewModel
 ) {
-    // Usar el estado del ViewModel
+    // Estados de autenticación desde ViewModel
     val authState by authVm.authState.collectAsState()
     val isGuestUser = authState is AuthViewModel.AuthState.Authenticated &&
             (authState as AuthViewModel.AuthState.Authenticated).isGuest
 
+    // Usuario logueado con email/contraseña
+    val isLoggedInUser = authState is AuthViewModel.AuthState.Authenticated &&
+            !(authState as AuthViewModel.AuthState.Authenticated).isGuest
+
+    // Email del usuario actual desde Firebase Auth
+    val currentUserEmail = authVm.getCurrentUserEmail()
+
+    // Estados para controles de UI
     var showWelcomeToast by remember { mutableStateOf(false) }
     var showUpgradePrompt by remember { mutableStateOf(false) }
 
+    // Efecto para mostrar toasts en modo invitado
     LaunchedEffect(isGuestUser) {
         if (isGuestUser) {
             showWelcomeToast = true
             delay(5000)
             showWelcomeToast = false
 
-            // Mostrar invitación a registrarse después de 8 segundos
             delay(8000)
             showUpgradePrompt = true
         }
@@ -46,7 +54,11 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             MilTopBar(
-                title = if (isGuestUser) "Pastelería Mil Sabores" else "Pastelería Mil Sabores", // QUITADO el icono 🎭
+                title = when {
+                    isGuestUser -> "Pastelería Mil Sabores"
+                    isLoggedInUser -> "Bienvenido/a"
+                    else -> "Pastelería Mil Sabores"
+                },
                 onCart = {
                     onNavigate("carrito")
                 }
@@ -67,6 +79,53 @@ fun HomeScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Top
             ) {
+                // Tarjeta para usuarios logueados con Firebase Auth - Mismo color que invitado
+                if (isLoggedInUser && currentUserEmail != null) {
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column {
+                                    Text(
+                                        "¡Bienvenido de vuelta!",
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                    Text(
+                                        "Estás logueado como: $currentUserEmail",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+                            Spacer(Modifier.height(8.dp))
+                            Button(
+                                onClick = {
+                                    authVm.logout()
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = MaterialTheme.colorScheme.onPrimary
+                                )
+                            ) {
+                                Text("Cerrar Sesión")
+                            }
+                        }
+                    }
+                }
+
+                // Tarjeta para modo invitado (acceso temporal)
                 if (isGuestUser) {
                     Card(
                         colors = CardDefaults.cardColors(
@@ -96,7 +155,6 @@ fun HomeScreen(
                                 }
                             }
                             Spacer(Modifier.height(8.dp))
-                            // CORREGIDO: Botón "Salir" arriba del de registro
                             Button(
                                 onClick = { authVm.logoutGuest() },
                                 modifier = Modifier.fillMaxWidth(),
@@ -124,6 +182,7 @@ fun HomeScreen(
                     }
                 }
 
+                // Sección de productos destacados
                 Text(
                     "Productos destacados del mes",
                     style = MaterialTheme.typography.headlineSmall
@@ -164,18 +223,18 @@ fun HomeScreen(
                 }
             }
 
-            // Diálogo para invitar a registrarse
+            // Diálogo para invitar a registrarse desde modo invitado
             if (showUpgradePrompt) {
                 AlertDialog(
                     onDismissRequest = { showUpgradePrompt = false },
                     title = { Text("¡No te pierdas los beneficios!") },
                     text = {
                         Text("Regístrate ahora y obtén:\n\n" +
-                                "✅ Descuentos exclusivos\n" +
-                                "✅ Acumulación de puntos\n" +
-                                "✅ Ofertas especiales\n" +
-                                "✅ Historial de pedidos\n" +
-                                "✅ Notificaciones de nuevos productos")
+                                "Descuentos exclusivos\n" +
+                                "Acumulación de puntos\n" +
+                                "Ofertas especiales\n" +
+                                "Historial de pedidos\n" +
+                                "Notificaciones de nuevos productos")
                     },
                     confirmButton = {
                         Button(
@@ -193,7 +252,6 @@ fun HomeScreen(
                         }
                     },
                     dismissButton = {
-                        // CORREGIDO: Botón "Quizás después" con color
                         Button(
                             onClick = { showUpgradePrompt = false },
                             colors = ButtonDefaults.buttonColors(
@@ -207,6 +265,7 @@ fun HomeScreen(
                 )
             }
 
+            // Toast de bienvenida para modo invitado
             if (showWelcomeToast) {
                 Box(
                     modifier = Modifier

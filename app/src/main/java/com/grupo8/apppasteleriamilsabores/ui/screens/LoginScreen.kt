@@ -1,19 +1,21 @@
 package com.grupo8.apppasteleriamilsabores.ui.screens
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.grupo8.apppasteleriamilsabores.viewmodel.AuthViewModel
 import com.grupo8.apppasteleriamilsabores.ui.components.MilBottomNav
 import com.grupo8.apppasteleriamilsabores.ui.components.MilTopBar
-import kotlinx.coroutines.delay
 
 @Composable
 fun LoginScreen(
@@ -22,24 +24,24 @@ fun LoginScreen(
     vm: AuthViewModel,
     onLoggedIn: () -> Unit
 ) {
+    // Estados locales para los campos del formulario
     var email by remember { mutableStateOf("") }
     var pass by remember { mutableStateOf("") }
     var showGuestDialog by remember { mutableStateOf(false) }
+    var passwordVisible by remember { mutableStateOf(false) }
 
-    // Observar estados del ViewModel
+    // Observar estados del ViewModel - autenticación y UI
     val authState by vm.authState.collectAsState()
     val authError by vm.authError.collectAsState()
     val isLoading by vm.isLoading.collectAsState()
+
+    // Estados de autenticación para controlar la UI
     val isAlreadyGuest = authState is AuthViewModel.AuthState.Authenticated &&
             (authState as AuthViewModel.AuthState.Authenticated).isGuest
 
-    // Animación de fade out para errores antiguos
-    val showOldError by remember { mutableStateOf(false) }
-    val toastAlpha by animateFloatAsState(
-        targetValue = if (showOldError) 1f else 0f,
-        animationSpec = androidx.compose.animation.core.tween(durationMillis = 300),
-        label = "toastAlpha"
-    )
+    // Usuario logueado con email/contraseña
+    val isAlreadyLoggedIn = authState is AuthViewModel.AuthState.Authenticated &&
+            !(authState as AuthViewModel.AuthState.Authenticated).isGuest
 
     // Efecto para limpiar errores cuando se cambian los campos
     LaunchedEffect(email, pass) {
@@ -100,76 +102,150 @@ fun LoginScreen(
                     }
                 }
 
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Email") },
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !isLoading,
-                    isError = authError != null
-                )
-                Spacer(Modifier.height(8.dp))
-                OutlinedTextField(
-                    value = pass,
-                    onValueChange = { pass = it },
-                    label = { Text("Contraseña") },
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !isLoading,
-                    isError = authError != null
-                )
-                Spacer(Modifier.height(12.dp))
-
-                // Botón de login con estado de carga
-                Button(
-                    onClick = {
-                        vm.login(email, pass) {
-                            onLoggedIn()
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ),
-                    enabled = !isLoading && email.isNotBlank() && pass.isNotBlank()
-                ) {
-                    if (isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(20.dp),
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            strokeWidth = 2.dp
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text("Iniciando sesión...")
-                    } else {
-                        Text("Iniciar Sesión")
-                    }
-                }
-
-                Spacer(Modifier.height(8.dp))
-
-                // Botón de invitado con validación
-                if (isAlreadyGuest) {
-                    // Si ya es invitado, mostrar mensaje informativo
+                // Mensaje informativo para usuarios ya logueados
+                if (isAlreadyLoggedIn) {
                     Card(
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,  // ✅ COLOR UNIFICADO
+                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer   // ✅ COLOR UNIFICADO
                         ),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
                     ) {
                         Row(
                             modifier = Modifier.padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Text("✅ Ya estás en modo invitado")
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = "Verificado",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                "✅ Ya estás logueado en la aplicación",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                         }
                     }
-                } else {
-                    // Botón de invitado normal
+
+                    // Botón para continuar directamente al home
                     Button(
-                        onClick = { showGuestDialog = true },
+                        onClick = { onLoggedIn() },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    ) {
+                        Text("Continuar a la aplicación")
+                    }
+
+                    Spacer(Modifier.height(8.dp))
+                }
+
+                // Formulario de login - solo mostrar si no está logueado
+                if (!isAlreadyLoggedIn) {
+                    // Campo de email para autenticación
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text("Email") },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isLoading,
+                        isError = authError != null
+                    )
+                    Spacer(Modifier.height(8.dp))
+
+                    // Campo de contraseña con opción mostrar/ocultar
+                    OutlinedTextField(
+                        value = pass,
+                        onValueChange = { pass = it },
+                        label = { Text("Contraseña") },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isLoading,
+                        isError = authError != null,
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        trailingIcon = {
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                    contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
+                                )
+                            }
+                        }
+                    )
+                    Spacer(Modifier.height(12.dp))
+
+                    // Botón de login con estado de carga
+                    Button(
+                        onClick = {
+                            vm.login(email, pass) {
+                                onLoggedIn()
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        enabled = !isLoading && email.isNotBlank() && pass.isNotBlank()
+                    ) {
+                        if (isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                strokeWidth = 2.dp
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text("Iniciando sesión...")
+                        } else {
+                            Text("Iniciar Sesión")
+                        }
+                    }
+
+                    Spacer(Modifier.height(8.dp))
+
+                    // Botón de invitado con validación
+                    if (isAlreadyGuest) {
+                        // Si ya es invitado, mostrar mensaje informativo
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,  // ✅ COLOR UNIFICADO
+                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer   // ✅ COLOR UNIFICADO
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text("✅ Ya estás en modo invitado")
+                            }
+                        }
+                    } else {
+                        // Botón de invitado normal
+                        Button(
+                            onClick = { showGuestDialog = true },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary
+                            ),
+                            enabled = !isLoading
+                        ) {
+                            Text("Continuar como Invitado")
+                        }
+                    }
+
+                    Spacer(Modifier.height(8.dp))
+
+                    // Botón de registro para nuevos usuarios
+                    Button(
+                        onClick = { onNavigate("registro") },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
@@ -177,28 +253,13 @@ fun LoginScreen(
                         ),
                         enabled = !isLoading
                     ) {
-                        Text("Continuar como Invitado")
+                        Text("Crear cuenta")
                     }
-                }
-
-                Spacer(Modifier.height(8.dp))
-
-                // Botón de registro
-                Button(
-                    onClick = { onNavigate("registro") },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ),
-                    enabled = !isLoading
-                ) {
-                    Text("Crear cuenta")
                 }
             }
 
             // Diálogo informativo para modo invitado
-            if (showGuestDialog && !isAlreadyGuest) {
+            if (showGuestDialog && !isAlreadyGuest && !isAlreadyLoggedIn) {
                 AlertDialog(
                     onDismissRequest = { showGuestDialog = false },
                     title = { Text("Modo Invitado") },

@@ -2,11 +2,15 @@ package com.grupo8.apppasteleriamilsabores.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.grupo8.apppasteleriamilsabores.ui.components.MilBottomNav
 import com.grupo8.apppasteleriamilsabores.ui.components.MilTopBar
@@ -23,6 +27,7 @@ fun RegisterScreen(
     var apellido by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var pass by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     // Observar estados
     val authError by vm.authError.collectAsState()
@@ -109,13 +114,24 @@ fun RegisterScreen(
                 isError = authError != null
             )
             Spacer(Modifier.height(8.dp))
+
+            // Campo de contraseña con opción mostrar/ocultar
             OutlinedTextField(
                 value = pass,
                 onValueChange = { pass = it },
                 label = { Text("Contraseña (mínimo 6 caracteres)") },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isLoading,
-                isError = authError != null
+                isError = authError != null,
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                            contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
+                        )
+                    }
+                }
             )
             Spacer(Modifier.height(16.dp))
 
@@ -150,7 +166,6 @@ fun RegisterScreen(
 
             Spacer(Modifier.height(12.dp))
 
-            // CORREGIDO: Cambiado a Button normal con el mismo color
             Button(
                 onClick = { onNavigate("login") },
                 modifier = Modifier.fillMaxWidth(),
