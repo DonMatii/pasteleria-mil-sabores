@@ -1,4 +1,4 @@
-// ProductCard.kt - Versión con animación de confirmación pastel
+// ProductCard.kt - Versión con control de visibilidad del botón
 package com.grupo8.apppasteleriamilsabores.ui.components
 
 import androidx.compose.foundation.Image
@@ -23,10 +23,17 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import kotlinx.coroutines.delay
 
+/**
+ * Componente reutilizable para mostrar tarjetas de productos
+ * @param p Producto a mostrar
+ * @param onAddToCart Función callback para agregar al carrito
+ * @param showAddButton Controla si muestra el botón "Agregar al carrito" (true) o solo vista previa (false)
+ */
 @Composable
 fun ProductCard(
     p: Productos,
-    onAddToCart: (Long) -> Unit
+    onAddToCart: (Long) -> Unit,
+    showAddButton: Boolean = true  // ✅ PARÁMETRO NUEVO: Controlar visibilidad del botón
 ) {
     var isVisible by remember { mutableStateOf(false) }
     val alpha by animateFloatAsState(
@@ -41,13 +48,14 @@ fun ProductCard(
         animationSpec = tween(durationMillis = 150)
     )
 
-    // NUEVA: Animación de confirmación pastel
+    // Animación de confirmación pastel
     var showConfirmation by remember { mutableStateOf(false) }
     val confirmationAlpha by animateFloatAsState(
         targetValue = if (showConfirmation) 1f else 0f,
         animationSpec = tween(durationMillis = 300)
     )
 
+    // Efecto para animación de entrada
     LaunchedEffect(Unit) {
         isVisible = true
     }
@@ -83,6 +91,7 @@ fun ProductCard(
                     ctx.resources.getIdentifier(key, "drawable", ctx.packageName)
                 } ?: 0
 
+                // Imagen del producto
                 if (drawableId != 0) {
                     Image(
                         painter = painterResource(id = drawableId),
@@ -93,6 +102,7 @@ fun ProductCard(
                     Spacer(Modifier.height(8.dp))
                 }
 
+                // Información del producto
                 Text(
                     p.nombreProd,
                     style = MaterialTheme.typography.titleMedium,
@@ -103,22 +113,27 @@ fun ProductCard(
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(Modifier.height(8.dp))
-                Button(
-                    onClick = {
-                        buttonClicked = true
-                        showConfirmation = true  // Mostrar confirmación
-                        onAddToCart(p.idProd)
-                    },
-                    shape = MaterialTheme.shapes.medium,
-                    modifier = Modifier.scale(buttonScale)
-                ) {
-                    Text("Agregar al carrito")
+
+                // ✅ MODIFICADO: Mostrar botón solo si showAddButton es true
+                // En Home será false, en Catálogo será true
+                if (showAddButton) {
+                    Button(
+                        onClick = {
+                            buttonClicked = true
+                            showConfirmation = true  // Mostrar confirmación
+                            onAddToCart(p.idProd)
+                        },
+                        shape = MaterialTheme.shapes.medium,
+                        modifier = Modifier.scale(buttonScale)
+                    ) {
+                        Text("Agregar al carrito")
+                    }
                 }
             }
         }
 
-        // NUEVO: Mensaje de confirmación pastel
-        if (showConfirmation || confirmationAlpha > 0f) {
+        // Mensaje de confirmación pastel - solo mostrar si el botón está visible
+        if ((showConfirmation || confirmationAlpha > 0f) && showAddButton) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

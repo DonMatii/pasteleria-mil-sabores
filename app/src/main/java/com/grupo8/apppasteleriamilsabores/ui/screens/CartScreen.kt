@@ -4,6 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,6 +22,17 @@ import com.grupo8.apppasteleriamilsabores.ui.theme.CremePastel
 import com.grupo8.apppasteleriamilsabores.ui.theme.Rosa
 import kotlinx.coroutines.delay
 
+/**
+ * Pantalla del carrito de compras - Muestra productos seleccionados y gestiona compra
+ * @param currentRoute Ruta actual de navegación
+ * @param onNavigate Función callback para navegar entre pantallas
+ * @param lines Lista de productos en el carrito con información de cantidad y subtotal
+ * @param onRemove Función callback para eliminar producto del carrito
+ * @param onClear Función callback para vaciar carrito completo
+ * @param onPurchase Función callback para procesar compra (solo usuarios autenticados)
+ * @param isAuthenticated Indica si el usuario está autenticado (logueado o como invitado)
+ * @param onUpdateQuantity Función callback para actualizar cantidad de productos
+ */
 @Composable
 fun CartScreen(
     currentRoute: String,
@@ -26,10 +40,32 @@ fun CartScreen(
     lines: List<CartLineUi>,
     onRemove: (Long) -> Unit,
     onClear: () -> Unit,
-    onPurchase: () -> Unit  // Función para procesar compra
+    onPurchase: () -> Unit,
+    isAuthenticated: Boolean,
+    onUpdateQuantity: (Long, Int) -> Unit
 ) {
     // Estado para controlar mensaje de agradecimiento
     var showThankYouMessage by remember { mutableStateOf(false) }
+
+    // Estado para controlar redirección a login
+    var shouldRedirectToLogin by remember { mutableStateOf(false) }
+
+    // Efecto para redirigir a login cuando sea necesario
+    LaunchedEffect(shouldRedirectToLogin) {
+        if (shouldRedirectToLogin) {
+            delay(300)
+            onNavigate("login")
+        }
+    }
+
+    // Efecto para manejar la compra y el mensaje de agradecimiento
+    LaunchedEffect(showThankYouMessage) {
+        if (showThankYouMessage) {
+            delay(5000)
+            showThankYouMessage = false
+            onPurchase()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -81,6 +117,7 @@ fun CartScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
+                                // Columna izquierda: Información del producto
                                 Column(
                                     Modifier.weight(1f),
                                     verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -92,19 +129,84 @@ fun CartScreen(
                                         fontWeight = FontWeight.SemiBold
                                     )
                                     Text(
-                                        text = "x${line.cantidadProd}  ·  $${"%.0f".format(line.precioProd)} c/u",
+                                        text = "$${"%.0f".format(line.precioProd)} c/u",
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = CafeOscuro.copy(alpha = 0.7f)
                                     )
+                                    Text(
+                                        text = "Subtotal: $${"%.0f".format(line.subtotal)}",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = Rosa,
+                                        fontWeight = FontWeight.Medium
+                                    )
                                 }
 
-                                Column(horizontalAlignment = Alignment.End) {
-                                    Text(
-                                        "$${"%.0f".format(line.subtotal)}",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Medium,
-                                        color = CafeOscuro
-                                    )
+                                // Columna derecha: Controles de cantidad y eliminar
+                                Column(
+                                    horizontalAlignment = Alignment.End,
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    // Controles de cantidad (+/-)
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        // Botón para disminuir cantidad
+                                        IconButton(
+                                            onClick = {
+                                                val nuevaCantidad = line.cantidadProd - 1
+                                                if (nuevaCantidad <= 0) {
+                                                    // Si la cantidad llega a 0, eliminar producto
+                                                    onRemove(line.idProd)
+                                                } else {
+                                                    // Actualizar cantidad usando productId
+                                                    onUpdateQuantity(line.productId, nuevaCantidad)
+                                                }
+                                            },
+                                            modifier = Modifier.size(32.dp),
+                                            colors = IconButtonDefaults.iconButtonColors(
+                                                containerColor = Rosa.copy(alpha = 0.2f),
+                                                contentColor = Rosa
+                                            )
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Remove,
+                                                contentDescription = "Disminuir cantidad",
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                        }
+
+                                        // Cantidad actual
+                                        Text(
+                                            text = line.cantidadProd.toString(),
+                                            style = MaterialTheme.typography.titleMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = CafeOscuro,
+                                            modifier = Modifier.width(24.dp)
+                                        )
+
+                                        // Botón para aumentar cantidad
+                                        IconButton(
+                                            onClick = {
+                                                val nuevaCantidad = line.cantidadProd + 1
+                                                // Actualizar cantidad usando productId
+                                                onUpdateQuantity(line.productId, nuevaCantidad)
+                                            },
+                                            modifier = Modifier.size(32.dp),
+                                            colors = IconButtonDefaults.iconButtonColors(
+                                                containerColor = CafeOscuro.copy(alpha = 0.2f),
+                                                contentColor = CafeOscuro
+                                            )
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Add,
+                                                contentDescription = "Aumentar cantidad",
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                        }
+                                    }
+
+                                    // Botón eliminar producto
                                     TextButton(
                                         onClick = { onRemove(line.idProd) },
                                         contentPadding = PaddingValues(0.dp)
@@ -153,31 +255,57 @@ fun CartScreen(
 
                 Spacer(Modifier.height(16.dp))
 
-                // Botón principal - Finalizar compra con color corporativo
-                Button(
-                    onClick = {
-                        showThankYouMessage = true
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.large,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = CafeOscuro,  // Color café chocolate corporativo
-                        contentColor = Color.White    // Texto blanco para contraste
+                // Botón de compra condicional basado en autenticación
+                if (isAuthenticated) {
+                    // Botón principal - Finalizar compra para usuarios autenticados
+                    Button(
+                        onClick = {
+                            showThankYouMessage = true
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.large,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = CafeOscuro,
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text("✅ Finalizar Compra", style = MaterialTheme.typography.labelLarge)
+                    }
+                } else {
+                    // Botón para redirigir a login si no está autenticado
+                    Button(
+                        onClick = {
+                            shouldRedirectToLogin = true
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.large,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    ) {
+                        Text("🔐 Iniciar Sesión para Comprar", style = MaterialTheme.typography.labelLarge)
+                    }
+
+                    // Mensaje informativo
+                    Text(
+                        "Debes iniciar sesión o entrar como invitado para realizar compras",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = CafeOscuro.copy(alpha = 0.7f),
+                        modifier = Modifier.padding(top = 8.dp)
                     )
-                ) {
-                    Text("✅ Finalizar Compra", style = MaterialTheme.typography.labelLarge)
                 }
 
                 Spacer(Modifier.height(8.dp))
 
-                // Botón secundario - Vaciar carrito completo con mismo color corporativo
+                // Botón secundario - Vaciar carrito completo
                 Button(
                     onClick = onClear,
                     modifier = Modifier.fillMaxWidth(),
                     shape = MaterialTheme.shapes.large,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = CafeOscuro,  // Mismo color café chocolate
-                        contentColor = Color.White    // Texto blanco para contraste
+                        containerColor = CafeOscuro,
+                        contentColor = Color.White
                     )
                 ) {
                     Text("🗑️ Vaciar carrito", style = MaterialTheme.typography.labelLarge)
@@ -186,44 +314,35 @@ fun CartScreen(
         }
 
         // Mensaje de agradecimiento después de comprar
-        if (showThankYouMessage) {
-            // Efecto para controlar el tiempo del mensaje y la navegación
-            LaunchedEffect(showThankYouMessage) {
-                delay(5000) // Mostrar por 5 segundos COMPLETOS
-                showThankYouMessage = false
-                // Solo después de mostrar el mensaje, procesar la compra
-                onPurchase()
-            }
-
-            // Overlay con mensaje de agradecimiento
+        if (showThankYouMessage && isAuthenticated) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.7f)) // Fondo más oscuro
-                    .padding(32.dp), // Más padding para mejor visibilidad
+                    .background(Color.Black.copy(alpha = 0.7f))
+                    .padding(32.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Card(
                     colors = CardDefaults.cardColors(
-                        containerColor = CremePastel,  // Fondo crema pastel corporativo
-                        contentColor = CafeOscuro      // Texto café chocolate
+                        containerColor = CremePastel,
+                        contentColor = CafeOscuro
                     ),
-                    elevation = CardDefaults.cardElevation(12.dp), // Más elevación
-                    modifier = Modifier.fillMaxWidth(0.8f) // Ancho del 80%
+                    elevation = CardDefaults.cardElevation(12.dp),
+                    modifier = Modifier.fillMaxWidth(0.8f)
                 ) {
                     Column(
-                        modifier = Modifier.padding(32.dp), // Más padding interno
+                        modifier = Modifier.padding(32.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
                             "🎉 ¡Gracias por su compra!",
-                            style = MaterialTheme.typography.headlineMedium, // Texto más grande
+                            style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         Text(
                             "Su pedido ha sido procesado exitosamente",
-                            style = MaterialTheme.typography.bodyLarge, // Texto más grande
+                            style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
                         Text(

@@ -40,18 +40,31 @@ class CartViewModel(private val repo: MilSaboresRepository): ViewModel() {
         viewModelScope.launch { repo.clearCart() }
     }
 
+    // Actualizar cantidad de producto en el carrito
+    fun updateQuantity(productId: Long, newQuantity: Int) {
+        viewModelScope.launch {
+            if (newQuantity <= 0) {
+                // Si la cantidad es 0 o menor, eliminar producto
+                repo.removeCartItem(productId)
+            } else {
+                // Actualizar cantidad manteniendo el producto
+                repo.updateCartItemQuantity(productId, newQuantity)
+            }
+        }
+    }
+
     // Procesar compra - guardar en Firestore y limpiar carrito
     fun purchase(userEmail: String? = null) {
         viewModelScope.launch {
             try {
                 // Crear orden para Firestore
                 val order = FirestoreOrder(
-                    orderId = UUID.randomUUID().toString(), // ID único generado automáticamente
-                    userEmail = userEmail ?: "invitado", // Email del usuario o "invitado" para usuarios no logueados
-                    items = ui.value.lines, // Lista de productos del carrito
-                    total = ui.value.total, // Total calculado de la compra
-                    timestamp = Timestamp.now(), // Fecha y hora actual de la compra
-                    status = "completed" // Estado del pedido - completado
+                    orderId = UUID.randomUUID().toString(),
+                    userEmail = userEmail ?: "invitado",
+                    items = ui.value.lines,
+                    total = ui.value.total,
+                    timestamp = Timestamp.now(),
+                    status = "completed"
                 )
 
                 // Guardar orden en Firestore Database
@@ -61,7 +74,7 @@ class CartViewModel(private val repo: MilSaboresRepository): ViewModel() {
                 repo.clearCart()
 
             } catch (e: Exception) {
-                // Manejar error en caso de fallo al guardar - por ahora solo imprimir
+                // Manejar error en caso de fallo al guardar
                 e.printStackTrace()
             }
         }
@@ -69,10 +82,10 @@ class CartViewModel(private val repo: MilSaboresRepository): ViewModel() {
 
     // Función para guardar orden en Firestore Database
     private suspend fun saveOrderToFirestore(order: FirestoreOrder) {
-        val db = FirebaseFirestore.getInstance() // Obtener instancia de Firestore
-        db.collection("orders") // Colección "orders" en Firestore
-            .document(order.orderId) // Documento con ID único de la orden
-            .set(order) // Guardar objeto orden completo
-            .await() // Esperar a que se complete la operación de guardado
+        val db = FirebaseFirestore.getInstance()
+        db.collection("orders")
+            .document(order.orderId)
+            .set(order)
+            .await()
     }
 }

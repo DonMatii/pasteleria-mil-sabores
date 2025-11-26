@@ -156,7 +156,7 @@ fun ContactScreen(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        "📞 También puedes contactarnos por:",
+                        "También puedes contactarnos por:",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )

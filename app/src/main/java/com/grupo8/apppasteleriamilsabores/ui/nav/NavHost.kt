@@ -11,6 +11,13 @@ import androidx.navigation.compose.rememberNavController
 import com.grupo8.apppasteleriamilsabores.ui.screens.*
 import com.grupo8.apppasteleriamilsabores.viewmodel.*
 
+/**
+ * Sistema de navegación principal de la aplicación
+ * Gestiona el flujo entre pantallas y control de acceso basado en autenticación
+ * @param authVm ViewModel de autenticación para verificar estado de usuario
+ * @param storeVm ViewModel de productos para cargar catálogo y destacados
+ * @param cartVm ViewModel del carrito para gestionar productos seleccionados
+ */
 @Composable
 fun MilSaboresNav(
     authVm: AuthViewModel,
@@ -29,6 +36,9 @@ fun MilSaboresNav(
 
     // Estado de autenticación desde ViewModel - controla acceso a pantallas
     val authState by authVm.authState.collectAsState()
+
+    // Variable para verificar si el usuario está autenticado
+    val isAuthenticated = authState is AuthViewModel.AuthState.Authenticated
 
     // Control de navegación basado en autenticación - efecto que se ejecuta cuando cambia authState
     LaunchedEffect(authState) {
@@ -110,14 +120,32 @@ fun MilSaboresNav(
 
             CartScreen(
                 currentRoute = currentRoute,
-                onNavigate = { route -> nav.navigate(route) },
+                onNavigate = { route ->
+                    // Control de navegación desde carrito
+                    if (route == "carrito" && !isAuthenticated) {
+                        // Si no está autenticado y trata de ir al carrito, redirigir a login
+                        nav.navigate("login")
+                    } else {
+                        nav.navigate(route)
+                    }
+                },
                 lines = cartUi.lines,
                 onRemove = { id -> cartVm.remove(id) },
                 onClear = { cartVm.clear() },
                 onPurchase = {
-                    // Procesar compra - guardar en Firestore y mostrar mensaje
-                    cartVm.purchase(currentUserEmail) // Pasar email para la orden en Firestore
-                }
+                    // Solo permitir compra si está autenticado
+                    if (isAuthenticated) {
+                        // Procesar compra solo si está autenticado (logueado o invitado)
+                        cartVm.purchase(currentUserEmail)
+                    } else {
+                        // Si no está autenticado, redirigir a login
+                        nav.navigate("login")
+                    }
+                },
+                // Pasar el estado de autenticación al CartScreen
+                isAuthenticated = isAuthenticated,
+                // ✅ NUEVO: Pasar función para actualizar cantidad de productos
+                onUpdateQuantity = { id, cantidad -> cartVm.updateQuantity(id, cantidad) }
             )
         }
 

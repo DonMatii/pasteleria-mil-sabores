@@ -29,6 +29,7 @@ class MilSaboresRepository(
     suspend fun addToCart(productId: Long, qty: Int) {
         val existing = cartDao.findByProduct(productId)
         if (existing != null) {
+            // ✅ CORREGIDO: Usar el parámetro qty en lugar de incrementar siempre 1
             cartDao.incQty(existing.id, qty)
         } else {
             cartDao.insert(CartItem(productoId = productId, cantidadProds = qty))
@@ -37,6 +38,20 @@ class MilSaboresRepository(
 
     suspend fun removeCartItem(id: Long) = cartDao.remove(id)
     suspend fun clearCart() = cartDao.clear()
+
+    // Actualizar cantidad específica de producto en el carrito
+    suspend fun updateCartItemQuantity(productId: Long, newQuantity: Int) {
+        val existing = cartDao.findByProduct(productId)
+        if (existing != null) {
+            if (newQuantity <= 0) {
+                // Si la nueva cantidad es 0 o menor, eliminar el producto
+                cartDao.remove(existing.id)
+            } else {
+                // Actualizar a la cantidad específica
+                cartDao.updateQuantity(existing.id, newQuantity)
+            }
+        }
+    }
 
     // Funcion de detalles de producto en carrito
     fun cartLines(): Flow<List<CartLineUi>> =
@@ -57,5 +72,3 @@ class MilSaboresRepository(
             }
         }
 }
-
-

@@ -1,5 +1,6 @@
 package com.grupo8.apppasteleriamilsabores.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -15,6 +16,14 @@ import com.grupo8.apppasteleriamilsabores.ui.components.ProductCard
 import com.grupo8.apppasteleriamilsabores.viewmodel.AuthViewModel
 import kotlinx.coroutines.delay
 
+/**
+ * Pantalla principal de la aplicación - Muestra productos destacados y bienvenida
+ * @param currentRoute Ruta actual de navegación
+ * @param onNavigate Función callback para navegar entre pantallas
+ * @param onGoCatalog Función callback para ir al catálogo completo
+ * @param destacados Lista de productos destacados del mes
+ * @param authVm ViewModel de autenticación para gestionar estado de usuario
+ */
 @Composable
 fun HomeScreen(
     currentRoute: String,
@@ -182,7 +191,7 @@ fun HomeScreen(
                     }
                 }
 
-                // Sección de productos destacados
+                // Sección de productos destacados - Vista previa de productos populares
                 Text(
                     "Productos destacados del mes",
                     style = MaterialTheme.typography.headlineSmall
@@ -198,19 +207,38 @@ fun HomeScreen(
                 } else {
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         items(destacados) { p ->
+                            // Producto destacado clickeable - redirige al catálogo completo
+                            // ✅ CORREGIDO: showAddButton = false para ocultar botón en Home
                             Card(
                                 shape = MaterialTheme.shapes.large,
-                                modifier = Modifier.width(240.dp)
+                                modifier = Modifier
+                                    .width(240.dp)
+                                    .clickable {
+                                        // Redirigir al catálogo al hacer clic en cualquier producto
+                                        onGoCatalog()
+                                    }
                             ) {
                                 Column(Modifier.padding(12.dp)) {
-                                    ProductCard(p = p, onAddToCart = { })
+                                    // ✅ CORREGIDO: Mostrar producto SIN botón de agregar al carrito
+                                    // Solo vista previa para motivar visita al catálogo
+                                    ProductCard(p = p, onAddToCart = { }, showAddButton = false)
                                 }
                             }
                         }
                     }
+
+                    // Mensaje informativo para guiar al usuario al catálogo
+                    Text(
+                        "💡 Toca cualquier producto para ir al catálogo y comprar",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                        modifier = Modifier.padding(top = 12.dp)
+                    )
                 }
 
                 Spacer(Modifier.height(16.dp))
+
+                // Botón principal para acceder al catálogo completo de productos
                 Button(
                     onClick = onGoCatalog,
                     modifier = Modifier.fillMaxWidth(),

@@ -21,11 +21,13 @@ interface CartDao {
     @Query("UPDATE cart_items SET cantidadProds = cantidadProds + :delta WHERE id = :id")
     suspend fun incQty(id: Long, delta: Int)
 
+    // Actualizar cantidad específica
+    @Query("UPDATE cart_items SET cantidadProds = :newQuantity WHERE id = :cartItemId")
+    suspend fun updateQuantity(cartItemId: Long, newQuantity: Int)
+
     @Query("DELETE FROM cart_items WHERE id = :id")
     suspend fun remove(id: Long)
 
     @Query("DELETE FROM cart_items")
     suspend fun clear()
 }
-
-
