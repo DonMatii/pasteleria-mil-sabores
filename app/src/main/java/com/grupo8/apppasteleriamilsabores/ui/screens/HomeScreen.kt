@@ -99,7 +99,7 @@ fun HomeScreen(
                             ) {
                                 Column {
                                     Text(
-                                        "¡Bienvenido de vuelta!",
+                                        "¡Bienvenido a Pastelería Mil Sabores!",
                                         style = MaterialTheme.typography.bodyMedium
                                     )
                                     Text(

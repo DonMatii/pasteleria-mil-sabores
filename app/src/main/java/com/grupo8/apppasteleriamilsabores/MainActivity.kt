@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
 
             // TEMA PRINCIPAL DE LA APLICACIÓN
             MilSaboresTheme {
-                // 🔄 EFECTO PARA CARGA INICIAL DE DATOS
+                // EFECTO PARA CARGA INICIAL DE DATOS
                 LaunchedEffect(Unit) {
                     // 💡 NOTA: Esta línea está comentada - solo usar para limpiar datos en desarrollo
                     // repo.clearAllProducts() -> borrado de items duplicados en catalogo
