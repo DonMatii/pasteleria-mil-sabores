@@ -4,8 +4,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("org.jetbrains.kotlin.kapt")
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.21"
-
-    // Plugin para el Servicio de Google en Gradle
     id("com.google.gms.google-services")
 }
 
@@ -38,7 +36,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
-        // 🔥 AGREGAR ESTO PARA SOLUCIONAR KAPT:
         freeCompilerArgs = freeCompilerArgs + listOf(
             "-Xjvm-default=all",
         )
@@ -49,7 +46,6 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.compose.ui:ui-text-google-fonts:1.7.5")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     implementation("io.coil-kt:coil-compose:2.7.0")
@@ -68,19 +64,23 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    // Importación de Firebase BOM
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
-
-    // VERSIÓN EXPLÍCITA para evitar errores
     implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
     implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
 
-    // 🔥 RETROFIT - VERSIONES COMPATIBLES:
+    // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
+    // Testing con JUnit
     testImplementation(libs.junit)
+    testImplementation("org.mockito:mockito-core:5.11.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

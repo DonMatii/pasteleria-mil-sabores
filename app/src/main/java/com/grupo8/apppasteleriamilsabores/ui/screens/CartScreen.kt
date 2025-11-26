@@ -114,7 +114,7 @@ fun CartScreen(
                     }
                 }
 
-                Divider(
+                HorizontalDivider(
                     Modifier
                         .padding(vertical = 12.dp)
                         .background(Rosa.copy(alpha = 0.3f))
