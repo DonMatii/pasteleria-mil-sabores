@@ -1,1 +1,37 @@
+# Archivos de construcción de Android
 /build
+/app/build
+*.apk
+*.aab
+*.keystore
+
+# Archivos de Android Studio
+/.idea
+*.iml
+*.iws
+*.ipr
+.gradle
+/local.properties
+/.cxx
+/captures
+/.externalNativeBuild
+/.navigation
+
+# Archivos generados
+*.log
+*.tmp
+*.save
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de Gradle
+!gradle/wrapper/gradle-wrapper.jar
+!gradle-wrapper.properties
+/.gradle
+/gradle/wrapper/gradle-wrapper.jar
+
+# Archivos de configuración específicos (opcional mantener)
+# !.idea/codeStyles/
+# !.idea/runConfigurations/
