@@ -23,6 +23,9 @@ sealed class Route(val path: String) {
     // Pantalla de contacto para consultas y sugerencias
     object Contacto: Route("contacto")
 
+    // Pantalla de información sobre la pastelería
+    object QuienesSomos: Route("quienes-somos")
+
     // Pantalla de detalles de producto (para futura implementación)
     data class DetalleProd(val id: Long): Route("producto/{id}") {
         companion object {

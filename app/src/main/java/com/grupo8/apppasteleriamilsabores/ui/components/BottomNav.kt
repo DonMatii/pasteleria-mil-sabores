@@ -9,6 +9,7 @@ import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.ContactPhone
+import androidx.compose.material.icons.outlined.Info // ✅ NUEVO ICONO
 
 // Modelo para los items de la barra de navegación inferior
 data class BottomItem(val label: String, val icon: ImageVector, val route: String)
@@ -23,7 +24,8 @@ fun MilBottomNav(
         BottomItem("Inicio", Icons.Outlined.Home, "home"),           // Pantalla principal
         BottomItem("Catálogo", Icons.Outlined.Menu, "catalogo"),     // Catálogo de productos
         BottomItem("Carrito", Icons.Outlined.ShoppingCart, "carrito"), // Carrito de compras
-        BottomItem("Contacto", Icons.Outlined.ContactPhone, "contacto"), // ✅ NUEVO: Pantalla de contacto
+        BottomItem("Contacto", Icons.Outlined.ContactPhone, "contacto"), // Pantalla de contacto
+        BottomItem("Nosotros", Icons.Outlined.Info, "quienes-somos"), // Pantalla Quiénes Somos
         BottomItem("Login", Icons.Outlined.Person, "login")          // Inicio de sesión
     )
 

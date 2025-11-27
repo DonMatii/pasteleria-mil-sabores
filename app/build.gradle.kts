@@ -70,8 +70,11 @@ dependencies {
     // Corrutinas para operaciones asíncronas
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
 
-    // Iconos extendidos de Material Design (NUEVA DEPENDENCIA)
+    // Iconos extendidos de Material Design
     implementation("androidx.compose.material:material-icons-extended:1.7.5")
+
+    // WebView para mostrar contenido web en la app
+    implementation("androidx.webkit:webkit:1.8.0")
 
     // Dependencias básicas de Android
     implementation(libs.androidx.core.ktx)

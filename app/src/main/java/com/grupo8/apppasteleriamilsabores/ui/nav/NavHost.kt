@@ -144,7 +144,7 @@ fun MilSaboresNav(
                 },
                 // Pasar el estado de autenticación al CartScreen
                 isAuthenticated = isAuthenticated,
-                // ✅ NUEVO: Pasar función para actualizar cantidad de productos
+                // Pasar función para actualizar cantidad de productos
                 onUpdateQuantity = { id, cantidad -> cartVm.updateQuantity(id, cantidad) }
             )
         }
@@ -152,6 +152,14 @@ fun MilSaboresNav(
         // Pantalla de contacto - Formulario para consultas y sugerencias de clientes
         composable(Route.Contacto.path) {
             ContactScreen(
+                currentRoute = currentRoute,
+                onNavigate = { route -> nav.navigate(route) }
+            )
+        }
+
+        // Pantalla Quiénes Somos - Información sobre la pastelería
+        composable(Route.QuienesSomos.path) {
+            QuienesSomosScreen(
                 currentRoute = currentRoute,
                 onNavigate = { route -> nav.navigate(route) }
             )

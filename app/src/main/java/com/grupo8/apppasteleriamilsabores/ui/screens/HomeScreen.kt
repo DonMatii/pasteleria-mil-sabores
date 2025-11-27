@@ -1,14 +1,24 @@
 package com.grupo8.apppasteleriamilsabores.ui.screens
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import com.grupo8.apppasteleriamilsabores.data.model.Productos
 import com.grupo8.apppasteleriamilsabores.ui.components.MilBottomNav
 import com.grupo8.apppasteleriamilsabores.ui.components.MilTopBar
@@ -16,14 +26,34 @@ import com.grupo8.apppasteleriamilsabores.ui.components.ProductCard
 import com.grupo8.apppasteleriamilsabores.viewmodel.AuthViewModel
 import kotlinx.coroutines.delay
 
-/**
- * Pantalla principal de la aplicación - Muestra productos destacados y bienvenida
- * @param currentRoute Ruta actual de navegación
- * @param onNavigate Función callback para navegar entre pantallas
- * @param onGoCatalog Función callback para ir al catálogo completo
- * @param destacados Lista de productos destacados del mes
- * @param authVm ViewModel de autenticación para gestionar estado de usuario
- */
+@Composable
+fun SpotifyEmbed() {
+    AndroidView(
+        factory = { context ->
+            WebView(context).apply {
+                webViewClient = WebViewClient()
+                settings.javaScriptEnabled = true
+                settings.domStorageEnabled = true
+                settings.mediaPlaybackRequiresUserGesture = false
+                loadUrl("https://open.spotify.com/embed/playlist/7HYoc4lo87o4JoBSOgdsBM?utm_source=generator")
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp)
+    )
+}
+
+private fun openSpotifyPlaylist(context: android.content.Context) {
+    try {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("spotify:playlist:7HYoc4lo87o4JoBSOgdsBM"))
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://open.spotify.com/playlist/7HYoc4lo87o4JoBSOgdsBM"))
+        context.startActivity(intent)
+    }
+}
+
 @Composable
 fun HomeScreen(
     currentRoute: String,
@@ -32,23 +62,18 @@ fun HomeScreen(
     destacados: List<Productos>,
     authVm: AuthViewModel
 ) {
-    // Estados de autenticación desde ViewModel
     val authState by authVm.authState.collectAsState()
     val isGuestUser = authState is AuthViewModel.AuthState.Authenticated &&
             (authState as AuthViewModel.AuthState.Authenticated).isGuest
 
-    // Usuario logueado con email/contraseña
     val isLoggedInUser = authState is AuthViewModel.AuthState.Authenticated &&
             !(authState as AuthViewModel.AuthState.Authenticated).isGuest
 
-    // Email del usuario actual desde Firebase Auth
     val currentUserEmail = authVm.getCurrentUserEmail()
 
-    // Estados para controles de UI
     var showWelcomeToast by remember { mutableStateOf(false) }
     var showUpgradePrompt by remember { mutableStateOf(false) }
 
-    // Efecto para mostrar toasts en modo invitado
     LaunchedEffect(isGuestUser) {
         if (isGuestUser) {
             showWelcomeToast = true
@@ -85,10 +110,10 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Top
             ) {
-                // Tarjeta para usuarios logueados con Firebase Auth - Mismo color que invitado
                 if (isLoggedInUser && currentUserEmail != null) {
                     Card(
                         colors = CardDefaults.cardColors(
@@ -134,7 +159,6 @@ fun HomeScreen(
                     }
                 }
 
-                // Tarjeta para modo invitado (acceso temporal)
                 if (isGuestUser) {
                     Card(
                         colors = CardDefaults.cardColors(
@@ -191,7 +215,6 @@ fun HomeScreen(
                     }
                 }
 
-                // Sección de productos destacados - Vista previa de productos populares
                 Text(
                     "Productos destacados del mes",
                     style = MaterialTheme.typography.headlineSmall
@@ -207,27 +230,21 @@ fun HomeScreen(
                 } else {
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         items(destacados) { p ->
-                            // Producto destacado clickeable - redirige al catálogo completo
-                            // ✅ CORREGIDO: showAddButton = false para ocultar botón en Home
                             Card(
                                 shape = MaterialTheme.shapes.large,
                                 modifier = Modifier
                                     .width(240.dp)
                                     .clickable {
-                                        // Redirigir al catálogo al hacer clic en cualquier producto
                                         onGoCatalog()
                                     }
                             ) {
                                 Column(Modifier.padding(12.dp)) {
-                                    // ✅ CORREGIDO: Mostrar producto SIN botón de agregar al carrito
-                                    // Solo vista previa para motivar visita al catálogo
                                     ProductCard(p = p, onAddToCart = { }, showAddButton = false)
                                 }
                             }
                         }
                     }
 
-                    // Mensaje informativo para guiar al usuario al catálogo
                     Text(
                         "💡 Toca cualquier producto para ir al catálogo y comprar",
                         style = MaterialTheme.typography.bodyMedium,
@@ -236,9 +253,63 @@ fun HomeScreen(
                     )
                 }
 
+                Spacer(Modifier.height(24.dp))
+
+                Text(
+                    "🎵 Playlist del Mes",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            "Música para Endulzar tu Día 🎶",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(Modifier.height(12.dp))
+
+                        SpotifyEmbed()
+
+                        Spacer(Modifier.height(12.dp))
+
+                        val context = LocalContext.current
+                        Button(
+                            onClick = {
+                                openSpotifyPlaylist(context)
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF1DB954),
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Text("🎵 Abrir en la página de Spotify")
+                        }
+
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            "También disponible en nuestra tienda física",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
+
                 Spacer(Modifier.height(16.dp))
 
-                // Botón principal para acceder al catálogo completo de productos
                 Button(
                     onClick = onGoCatalog,
                     modifier = Modifier.fillMaxWidth(),
@@ -249,9 +320,10 @@ fun HomeScreen(
                 ) {
                     Text("Ver catálogo completo")
                 }
+
+                Spacer(Modifier.height(32.dp))
             }
 
-            // Diálogo para invitar a registrarse desde modo invitado
             if (showUpgradePrompt) {
                 AlertDialog(
                     onDismissRequest = { showUpgradePrompt = false },
@@ -293,7 +365,6 @@ fun HomeScreen(
                 )
             }
 
-            // Toast de bienvenida para modo invitado
             if (showWelcomeToast) {
                 Box(
                     modifier = Modifier
@@ -304,8 +375,8 @@ fun HomeScreen(
                     Card(
                         shape = MaterialTheme.shapes.medium,
                         colors = CardDefaults.cardColors(
-                            containerColor = androidx.compose.ui.graphics.Color(0xFFFFE4E9),
-                            contentColor = androidx.compose.ui.graphics.Color(0xFF8B4513)
+                            containerColor = Color(0xFFFFE4E9),
+                            contentColor = Color(0xFF8B4513)
                         ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                         modifier = Modifier.padding(horizontal = 16.dp)
