@@ -35,6 +35,8 @@ Solución móvil integral para la pastelería "Mil Sabores" que permite a los us
 
 **✅ Persistencia real: Órdenes y mensajes en Firestore**
 
+**✅ Consumo de APIs externas** - Spotify WebView + OpenWeatherMap
+
 # 🛠 Tecnologías Implementadas
 
 **Lenguaje de programación:** Kotlin
@@ -57,9 +59,16 @@ Solución móvil integral para la pastelería "Mil Sabores" que permite a los us
 
 **Testing:** JUnit + Mockito + Coroutines Test
 
-## 🎵 Funcionalidades Multimedia y Navegación
+**Consumo de APIs:** Retrofit + Gson
+
+**APIs externas:** Spotify Embed API + OpenWeatherMap API
+
+## 🎵 Funcionalidades Multimedia y APIs Externas
 
 **🎧 Integración Spotify** - WebView con playlist musical embebida
+
+
+**🌤️ API Clima OpenWeatherMap** - Clima en tiempo real de Viña del Mar
 
 **👥 Pantalla "Quienes Somos"** - Información del equipo y detalles del proyecto
 
@@ -72,20 +81,21 @@ Solución móvil integral para la pastelería "Mil Sabores" que permite a los us
 app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 ├── data/
-│   ├── local/           # Room Database y DAOs
-│   ├── model/           # Modelos de datos (Productos, CartLineUi, FirestoreOrder)
-│   └── repo/            # Patrón Repository
-├── viewmodel/           # ViewModels de la aplicación (Auth, Store, Cart, Contact)
+│   ├── api/            # Servicios de API (WeatherApiService, ApiClient)
+│   ├── local/          # Room Database y DAOs  
+│   ├── model/          # Modelos de datos (Productos, CartLineUi, FirestoreOrder, WeatherResponse)
+│   └── repo/           # Patrón Repository
+├── viewmodel/          # ViewModels de la aplicación (Auth, Store, Cart, Contact, Weather)
 ├── ui/
-│   ├── screens/         # Pantallas principales (Home, Login, Register, Catalog, Cart, Contact, QuienesSomos)
-│   ├── components/      # Componentes reutilizables (MilTopBar, MilBottomNav, ProductCard)
-│   ├── nav/            # Configuración de navegación (NavHost, Routes)
-│   └── theme/          # Tema de la aplicación (colores corporativos)
-├── test/               # 🧪 PRUEBAS UNITARIAS
+│   ├── screens/        # Pantallas principales (Home, Login, Register, Catalog, Cart, Contact, QuienesSomos)
+│   ├── components/     # Componentes reutilizables (MilTopBar, MilBottomNav, ProductCard)
+│   ├── nav/           # Configuración de navegación (NavHost, Routes)
+│   └── theme/         # Tema de la aplicación (colores corporativos)
+├── test/              # 🧪 PRUEBAS UNITARIAS
 │   └── viewmodel/
 │       ├── AuthViewModelTest.kt
 │       └── CartViewModelTest.kt
-└── MainActivity.kt     # Actividad principal
+└── MainActivity.kt    # Actividad principal
 
 # ⚡ Funcionalidades Principales
 
@@ -106,6 +116,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 **➕➖ Controles de cantidad** en carrito para ajustar productos
 
 **🔒 Control de acceso** para compras solo usuarios autenticados
+
+**🌤️ API Clima en tiempo real** - Integración con OpenWeatherMap para Viña del Mar
 
 # 📦 Gestión de Productos
 
@@ -338,6 +350,12 @@ app/build/reports/tests/testDebugUnitTest/index.html
 ✅ Mejoras visuales en múltiples componentes de interfaz
 ✅ Navegación expandida a 7 pantallas principales
 
+**Fase 6 - APIs Externas y Consumo de Datos**
+✅ Integración API OpenWeatherMap para clima en tiempo real
+✅ Configuración Retrofit + Gson para consumo de APIs REST
+✅ Implementación ViewModel para gestión de estado del clima
+✅ Tarjeta informativa del clima en pantalla principal
+
 ## 🔄 Próximos Objetivos
 
 🚀 Para Entrega Final:
@@ -360,27 +378,42 @@ app/build/reports/tests/testDebugUnitTest/index.html
 
 ## 🏗 Dependencias Principales
 
--  UI y Framework
+- UI y Framework
+  implementation("androidx.compose.ui:ui")
+  implementation("androidx.compose.material3:material3")
+  implementation("androidx.navigation:navigation-compose")
+  implementation("androidx.compose.ui:ui-text-google-fonts:1.7.5")
+  implementation("androidx.compose.material:material-icons-extended:1.7.5")
 
-implementation("androidx.compose.ui:ui")
-implementation("androidx.compose.material3:material3")
-implementation("androidx.navigation:navigation-compose")
+- Base de datos local
+  implementation("androidx.room:room-runtime:2.6.1")
+  implementation("androidx.room:room-ktx:2.6.1")
+  kapt("androidx.room:room-compiler:2.6.1")
 
-- Base de datos
+- Firebase - Servicios en la nube
+  implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+  implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
+  implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
 
-implementation("androidx.room:room-runtime")
-implementation("androidx.room:room-ktx")
+- APIs y Networking
+  implementation("com.squareup.retrofit2:retrofit:2.9.0")
+  implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+  implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+  implementation("com.google.code.gson:gson:2.10.1")
 
-- Firebase
-
-implementation("com.google.firebase:firebase-auth-ktx")
-implementation("com.google.firebase:firebase-firestore-ktx")
+- Utilidades y extensiones
+  implementation("io.coil-kt:coil-compose:2.7.0")  # Carga de imágenes
+  implementation("androidx.webkit:webkit:1.8.0")    # WebView para Spotify
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+  implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
 
 - Testing
-
-testImplementation("junit:junit:4.13.2")
-testImplementation("org.mockito:mockito-core:5.11.0")
-testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+  testImplementation("junit:junit:4.13.2")
+  testImplementation("org.mockito:mockito-core:5.11.0")
+  testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+  testImplementation("androidx.arch.core:core-testing:2.2.0")
+  testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
 ## 👥 Integrantes del Proyecto
 
