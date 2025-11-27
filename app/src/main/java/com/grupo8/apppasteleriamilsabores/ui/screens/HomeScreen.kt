@@ -19,13 +19,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.grupo8.apppasteleriamilsabores.data.model.Productos
 import com.grupo8.apppasteleriamilsabores.ui.components.MilBottomNav
 import com.grupo8.apppasteleriamilsabores.ui.components.MilTopBar
 import com.grupo8.apppasteleriamilsabores.ui.components.ProductCard
 import com.grupo8.apppasteleriamilsabores.viewmodel.AuthViewModel
+import com.grupo8.apppasteleriamilsabores.viewmodel.WeatherViewModel
+import com.grupo8.apppasteleriamilsabores.viewmodel.WeatherState
 import kotlinx.coroutines.delay
 
+// WebView para mostrar la playlist de Spotify embebida
 @Composable
 fun SpotifyEmbed() {
     AndroidView(
@@ -44,6 +48,7 @@ fun SpotifyEmbed() {
     )
 }
 
+// Función para abrir Spotify en la app o navegador
 private fun openSpotifyPlaylist(context: android.content.Context) {
     try {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("spotify:playlist:7HYoc4lo87o4JoBSOgdsBM"))
@@ -73,6 +78,10 @@ fun HomeScreen(
 
     var showWelcomeToast by remember { mutableStateOf(false) }
     var showUpgradePrompt by remember { mutableStateOf(false) }
+
+    // ViewModel para el clima de Viña del Mar - Integración con API externa
+    val weatherVm: WeatherViewModel = viewModel()
+    val weatherState by weatherVm.weatherState.collectAsState()
 
     LaunchedEffect(isGuestUser) {
         if (isGuestUser) {
@@ -114,6 +123,65 @@ fun HomeScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Top
             ) {
+                // Tarjeta del clima - Integración con API externa OpenWeatherMap
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            "🌤️ Clima en Viña del Mar",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(Modifier.height(8.dp))
+
+                        // Manejo de estados para la carga del clima
+                        when (weatherState) {
+                            is WeatherState.Loading -> {
+                                Text("Cargando clima...")
+                            }
+                            is WeatherState.Success -> {
+                                val weather = (weatherState as WeatherState.Success).weather
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Column {
+                                        Text(
+                                            "Temperatura: ${weather.main.temp}°C",
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                        Text(
+                                            "Condición: ${weather.weather.firstOrNull()?.description ?: "N/A"}",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                    }
+                                    Text(
+                                        "📍 ${weather.name}",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+                            is WeatherState.Error -> {
+                                Text(
+                                    "No se pudo cargar el clima",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Tarjeta de bienvenida para usuarios logueados
                 if (isLoggedInUser && currentUserEmail != null) {
                     Card(
                         colors = CardDefaults.cardColors(
@@ -159,6 +227,7 @@ fun HomeScreen(
                     }
                 }
 
+                // Tarjeta informativa para usuarios invitados
                 if (isGuestUser) {
                     Card(
                         colors = CardDefaults.cardColors(
@@ -215,6 +284,7 @@ fun HomeScreen(
                     }
                 }
 
+                // Sección de productos destacados del mes
                 Text(
                     "Productos destacados del mes",
                     style = MaterialTheme.typography.headlineSmall
@@ -255,6 +325,7 @@ fun HomeScreen(
 
                 Spacer(Modifier.height(24.dp))
 
+                // Sección de playlist musical con Spotify
                 Text(
                     "🎵 Playlist del Mes",
                     style = MaterialTheme.typography.headlineSmall
@@ -310,6 +381,7 @@ fun HomeScreen(
 
                 Spacer(Modifier.height(16.dp))
 
+                // Botón para navegar al catálogo completo
                 Button(
                     onClick = onGoCatalog,
                     modifier = Modifier.fillMaxWidth(),
@@ -324,6 +396,7 @@ fun HomeScreen(
                 Spacer(Modifier.height(32.dp))
             }
 
+            // Diálogo para promocionar registro a usuarios invitados
             if (showUpgradePrompt) {
                 AlertDialog(
                     onDismissRequest = { showUpgradePrompt = false },
@@ -365,6 +438,7 @@ fun HomeScreen(
                 )
             }
 
+            // Toast de bienvenida para usuarios invitados
             if (showWelcomeToast) {
                 Box(
                     modifier = Modifier

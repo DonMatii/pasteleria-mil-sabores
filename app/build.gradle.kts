@@ -96,6 +96,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
+    // Gson - Serialización/deserialización JSON para APIs
+    implementation("com.google.code.gson:gson:2.10.1")
+
     // Testing con JUnit y herramientas de prueba
     testImplementation(libs.junit)
     testImplementation("org.mockito:mockito-core:5.11.0")
