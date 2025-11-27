@@ -57,6 +57,16 @@ Solución móvil integral para la pastelería "Mil Sabores" que permite a los us
 
 **Testing:** JUnit + Mockito + Coroutines Test
 
+## 🎵 Funcionalidades Multimedia y Navegación
+
+**🎧 Integración Spotify** - WebView con playlist musical embebida
+
+**👥 Pantalla "Quienes Somos"** - Información del equipo y detalles del proyecto
+
+**📱 Navegación Expandida** - 7 pantallas principales con flujo optimizado
+
+**🎨 Mejoras Visuales** - Ajustes de interfaz y experiencia de usuario mejorada
+
 # 🏗 Arquitectura del Proyecto
 
 app/src/main/java/com/grupo8/apppasteleriamilsabores/
@@ -67,7 +77,7 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 │   └── repo/            # Patrón Repository
 ├── viewmodel/           # ViewModels de la aplicación (Auth, Store, Cart, Contact)
 ├── ui/
-│   ├── screens/         # Pantallas principales (Home, Login, Register, Catalog, Cart, Contact)
+│   ├── screens/         # Pantallas principales (Home, Login, Register, Catalog, Cart, Contact, QuienesSomos)
 │   ├── components/      # Componentes reutilizables (MilTopBar, MilBottomNav, ProductCard)
 │   ├── nav/            # Configuración de navegación (NavHost, Routes)
 │   └── theme/          # Tema de la aplicación (colores corporativos)
@@ -301,40 +311,32 @@ app/build/reports/tests/testDebugUnitTest/index.html
 ## 📈 Historial de Desarrollo
 
 **Fase 1 - Base y Autenticación**
-
 ✅ Sistema de autenticación completo con Firebase Auth
-
-✅ Navegación entre pantallas con Navigation Component
-
+✅ Navegación entre pantallas con Navigation Component  
 ✅ Pruebas unitarias para ViewModels principales
 
 **Fase 2 - Catálogo y Carrito**
-
 ✅ Catálogo de productos con Room Database
-
 ✅ Carrito de compras funcional con gestión completa
-
 ✅ UI/UX profesional con Material Design 3
 
 **Fase 3 - Persistencia Real**
-
 ✅ Integración con Firebase Firestore
-
 ✅ Sistema de órdenes reales guardadas en la nube
-
 ✅ Formulario de contacto con persistencia en Firestore
-
 ✅ Colores corporativos aplicados consistentemente
 
 **Fase 4 - Mejoras de UX y Control**
-
 ✅ Controles de cantidad en carrito con botones +/-
-
 ✅ Protección de compras para usuarios autenticados
-
 ✅ Mejora en navegación entre Home y Catálogo
-
 ✅ Optimización de interfaz de usuario
+
+**Fase 5 - Multimedia y Experiencia Completa**
+✅ Integración WebView de Spotify con playlist musical
+✅ Nueva pantalla "Quienes Somos" con información del equipo
+✅ Mejoras visuales en múltiples componentes de interfaz
+✅ Navegación expandida a 7 pantallas principales
 
 ## 🔄 Próximos Objetivos
 
