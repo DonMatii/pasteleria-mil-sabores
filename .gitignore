@@ -1,3 +1,4 @@
+# Archivos de build de Android
 *.iml
 .gradle
 /local.properties
@@ -16,3 +17,50 @@ local.properties
 .idea/
 *.iml
 local.properties
+
+# Archivos de firma y keystores
+*.jks
+*.keystore
+*.properties
+key.properties
+release.keys
+app/keystore/
+
+# APKs generadas
+app/build/outputs/apk/release/
+app/build/outputs/apk/debug/
+
+# Archivos de configuración sensible
+google-services.json
+app/google-services.json
+
+# Archivos de entorno
+.env
+.local.properties
+secrets.properties
+
+# Backup files
+*.backup
+*.bak
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Logs
+*.log
+
+# Archivos de macOS
+.DS_Store
+
+# Archivos de Windows
+Thumbs.db
+ehthumbs.db
+
+# Archivos de Android Studio
+*.iws
+*.log.*
+*.hprof
+*.orig
+*~
+.idea/

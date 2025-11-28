@@ -21,8 +21,20 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Configuración de firma para APK release
+    signingConfigs {
+        create("release") {
+            storeFile = file("/home/donmatii/Escritorio/Keys APKS firmadas Android Studio/Pasteleria Mil Sabores.jks")
+            storePassword = "PasteleriaMilSabores"
+            keyAlias = "PasteleriaMilSabores"
+            keyPassword = "PasteleriaMilSabores"
+        }
+    }
+
     buildTypes {
         release {
+            // Aplicar configuración de firma automática
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

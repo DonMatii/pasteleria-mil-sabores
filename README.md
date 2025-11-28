@@ -23,6 +23,8 @@ Solución móvil integral para la pastelería "Mil Sabores" que permite a los us
 
 **✅ Experiencia de Usuario Mejorada - Navegación intuitiva entre pantallas**
 
+**✅ APK Firmada Generada** - Configuración completa de firma release
+
 # 📊 Métricas de Calidad
 
 **✅ 11 pruebas unitarias ejecutadas**
@@ -36,6 +38,28 @@ Solución móvil integral para la pastelería "Mil Sabores" que permite a los us
 **✅ Persistencia real: Órdenes y mensajes en Firestore**
 
 **✅ Consumo de APIs externas** - Spotify WebView + OpenWeatherMap
+
+## 📦 APK FIRMADA - MODO RELEASE
+
+### ✅ Configuración Completada
+
+La aplicación cuenta con configuración de firma automatizada para generar APK listas para producción.
+
+### 🔧 Comandos de Build:
+
+# Generar APK firmada
+./gradlew clean assembleRelease
+
+# La APK se genera en:
+app/build/outputs/apk/release/app-release.apk
+
+## ⚠️ Información de Firma:
+
+- Keystore: Configurado en app/build.gradle.kts
+
+- Alias: PasteleriaMilSabores
+
+- APK de salida: app-release.apk lista para distribución
 
 # 🛠 Tecnologías Implementadas
 
@@ -356,25 +380,31 @@ app/build/reports/tests/testDebugUnitTest/index.html
 ✅ Implementación ViewModel para gestión de estado del clima
 ✅ Tarjeta informativa del clima en pantalla principal
 
+**Fase 7 - APK Firmada y Release**
+✅ Configuración de firma automatizada en build.gradle.kts
+✅ Generación de APK release funcional
+✅ Documentación de proceso de build
+
 ## 🔄 Próximos Objetivos
 
-🚀 Para Entrega Final:
+🚀 **PARA ENTREGA FINAL - COMPLETADO ✅**
 
-- 📦 APK Firmado - Generación de versión release
+- **APK Firmado** - ✅ CONFIGURADO Y GENERADO
 
-- 📚 Documentación Técnica - Arquitectura y diagramas
+- **Consumo de APIs externas** - ✅ OpenWeatherMap + Spotify
 
-- 🎤 Preparación Defensa - Demostración de funcionalidades
+- **Pruebas unitarias** - ✅ 11 tests - 100% éxito
 
-## 🔮 Futuras Mejoras:
+- **Documentación técnica** - ✅ README completo
 
-**📋 Historial de pedidos para usuarios registrados**
+- **Contexto definido** - ✅ Solución real para pastelería
 
-**📊 Dashboard administrativo en Firebase**
+## 🔒 Seguridad y Configuración
 
-**📧 Notificaciones push de confirmación**
-
-**🔗 Integración Spring Boot cuando backend esté listo**
+### Archivos Excluidos (.gitignore):
+- Keystores y archivos de firma (`*.jks`, `*.keystore`)
+- Archivos de configuración sensible
+- APKs generadas en build/
 
 ## 🏗 Dependencias Principales
 
