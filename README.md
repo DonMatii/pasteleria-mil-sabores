@@ -1,43 +1,57 @@
 ## 🍰 App Pastelería Mil Sabores - Grupo 8
 
-Aplicación móvil desarrollada en Android para la gestión y visualización de productos de pastelería. Proyecto correspondiente a la Evaluación N°4 de Desarrollo de Aplicaciones Móviles.
+Aplicación móvil desarrollada en Android para la gestión y visualización de productos de pastelería. Proyecto correspondiente a la Evaluación final y examen de Desarrollo de Aplicaciones Móviles.
 
-**📋 Descripción del Proyecto**
+---
+
+## 📋 Descripción del Proyecto
 Solución móvil integral para la pastelería "Mil Sabores" que permite a los usuarios explorar el catálogo de productos, gestionar un carrito de compras, realizar pedidos reales y contactar con la pastelería mediante sistema de autenticación seguro.
+
+---
+
+## 🎯 Contexto del Proyecto (EFT)
+
+Este proyecto corresponde a la **Evaluación Final Transversal (EFT) y examen** del curso **Desarrollo de Aplicaciones Móviles**.  
+La aplicación refleja el trabajo acumulado del semestre y cumple con los criterios solicitados:
+
+- Diseño visual estructurado y navegación jerárquica.
+- Formularios validados con retroalimentación clara por campo.
+- Gestión de estado y separación de lógica e interfaz (MVVM).
+- Animaciones funcionales y respuesta dinámica a la interacción.
+- Consumo de APIs externas y uso de recursos nativos.
+- Pruebas unitarias completas.
+- Generación de APK firmado en modo release.
+- Documentación técnica detallada.
+
+---
 
 ## 🏆 Estado del Proyecto
 
-**✅ Pruebas Unitarias Completadas - 11 tests con 100% de éxito**
+**✅ Pruebas Unitarias Completadas - 11 tests con 100% de éxito**  
+**✅ Código Optimizado - Corrección de warnings y mejoras de calidad**  
+**✅ Suite de Testing Profesional - Configuración con Mockito y Corrutinas**  
+**✅ Sistema de Compras Real - Órdenes guardadas en Firestore**  
+**✅ Sistema de Contacto Funcional - Mensajes en Firestore**  
+**✅ Controles de Cantidad en Carrito - Botones +/- funcionales**  
+**✅ Control de Autenticación - Solo usuarios autenticados pueden comprar**  
+**✅ Experiencia de Usuario Mejorada - Navegación intuitiva entre pantallas**  
+**✅ APK Firmada Generada - Configuración completa de firma release**
 
-**✅ Código Optimizado - Corrección de warnings y mejoras de calidad**
+---
 
-**✅ Suite de Testing Profesional - Configuración con Mockito y Corrutinas**
+## 📊 Métricas de Calidad
 
-**✅ Sistema de Compras Real - Órdenes guardadas en Firestore**
+- **11 pruebas unitarias ejecutadas**
 
-**✅ Sistema de Contacto Funcional - Mensajes en Firestore**
+- **0 fallas - 100% de éxito**
 
-**✅ Controles de Cantidad en Carrito - Botones +/- funcionales**
+- **Cobertura: AuthViewModel + CartViewModel**
 
-**✅ Control de Autenticación - Solo usuarios autenticados pueden comprar**
+- **Persistencia real: Órdenes y mensajes en Firestore**
 
-**✅ Experiencia de Usuario Mejorada - Navegación intuitiva entre pantallas**
+- **Consumo de APIs externas: Spotify WebView + OpenWeatherMap**
 
-**✅ APK Firmada Generada** - Configuración completa de firma release
-
-# 📊 Métricas de Calidad
-
-**✅ 11 pruebas unitarias ejecutadas**
-
-**✅ 0 fallas - 100% de éxito**
-
-**✅ 1.682 segundos de ejecución**
-
-**✅ Cobertura: AuthViewModel + CartViewModel**
-
-**✅ Persistencia real: Órdenes y mensajes en Firestore**
-
-**✅ Consumo de APIs externas** - Spotify WebView + OpenWeatherMap
+---
 
 ## 📦 APK FIRMADA - MODO RELEASE
 
@@ -45,15 +59,19 @@ Solución móvil integral para la pastelería "Mil Sabores" que permite a los us
 
 La aplicación cuenta con configuración de firma automatizada para generar APK listas para producción.
 
+
 ### 🔧 Comandos de Build:
 
-# Generar APK firmada
 ./gradlew clean assembleRelease
+
+---
 
 # La APK se genera en:
 app/build/outputs/apk/release/app-release.apk
 
-## ⚠️ Información de Firma:
+---
+
+## 🔒 Información de Firma:
 
 - Keystore: Configurado en app/build.gradle.kts
 
@@ -61,31 +79,20 @@ app/build/outputs/apk/release/app-release.apk
 
 - APK de salida: app-release.apk lista para distribución
 
-# 🛠 Tecnologías Implementadas
+## 🛠 Tecnologías Implementadas
 
-**Lenguaje de programación:** Kotlin
-
-**Interfaz de usuario:** Jetpack Compose
-
-**Diseño:** Material Design 3
-
-**Arquitectura:** MVVM (Model-View-ViewModel)
-
-**Base de datos local:** Room Database
-
-**Base de datos en la nube:** Firebase Firestore
-
-**Autenticación:** Firebase Authentication
-
-**Navegación:** Navigation Component
-
-**Gestión de estado:** StateFlows + ViewModel
-
-**Testing:** JUnit + Mockito + Coroutines Test
-
-**Consumo de APIs:** Retrofit + Gson
-
-**APIs externas:** Spotify Embed API + OpenWeatherMap API
+* Lenguaje de programación: Kotlin
+* Interfaz de usuario: Jetpack Compose
+* Diseño: Material Design 3
+* Arquitectura: MVVM (Model-View-ViewModel)
+* Base de datos local: Room Database
+* Base de datos en la nube: Firebase Firestore
+* Autenticación: Firebase Authentication
+* Navegación: Navigation Component
+* Gestión de estado: StateFlows + ViewModel
+* Testing: JUnit + Mockito + Coroutines Test
+* Consumo de APIs: Retrofit + Gson
+* APIs externas: Spotify Embed API + OpenWeatherMap API
 
 ## 🎵 Funcionalidades Multimedia y APIs Externas
 
@@ -100,26 +107,25 @@ app/build/outputs/apk/release/app-release.apk
 
 **🎨 Mejoras Visuales** - Ajustes de interfaz y experiencia de usuario mejorada
 
-# 🏗 Arquitectura del Proyecto
-
+🏗 Arquitectura del Proyecto
 app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
-├── data/
-│   ├── api/            # Servicios de API (WeatherApiService, ApiClient)
-│   ├── local/          # Room Database y DAOs  
-│   ├── model/          # Modelos de datos (Productos, CartLineUi, FirestoreOrder, WeatherResponse)
-│   └── repo/           # Patrón Repository
-├── viewmodel/          # ViewModels de la aplicación (Auth, Store, Cart, Contact, Weather)
+├── data/ 
+│   ├── api/ # Servicios de API (WeatherApiService, ApiClient)
+│   ├── local/ # Room Database y DAOs
+│   ├── model/ # Modelos de datos (Productos, CartLineUi, FirestoreOrder, WeatherResponse)
+│   └── repo/ # Patrón Repository
+├── viewmodel/ # ViewModels de la aplicación (Auth, Store, Cart, Contact, Weather)
 ├── ui/
-│   ├── screens/        # Pantallas principales (Home, Login, Register, Catalog, Cart, Contact, QuienesSomos)
-│   ├── components/     # Componentes reutilizables (MilTopBar, MilBottomNav, ProductCard)
-│   ├── nav/           # Configuración de navegación (NavHost, Routes)
-│   └── theme/         # Tema de la aplicación (colores corporativos)
-├── test/              # 🧪 PRUEBAS UNITARIAS
-│   └── viewmodel/
-│       ├── AuthViewModelTest.kt
-│       └── CartViewModelTest.kt
-└── MainActivity.kt    # Actividad principal
+│   ├── screens/ # Pantallas principales (Home, Login, Register, Catalog, Cart, Contact, QuienesSomos)
+│   ├── components/ # Componentes reutilizables (MilTopBar, MilBottomNav, ProductCard)
+│   ├── nav/ # Configuración de navegación (NavHost, Routes)
+│   └── theme/ # Tema de la aplicación (colores corporativos)
+├── test/ # 🧪 PRUEBAS UNITARIAS
+│ └── viewmodel/
+│   ├── AuthViewModelTest.kt 
+│   └── CartViewModelTest.kt
+└── MainActivity.kt # Actividad principal
 
 # ⚡ Funcionalidades Principales
 
@@ -330,9 +336,13 @@ git clone https://github.com/DonMatii/pasteleria-mil-sabores.git
 
 app/build/reports/tests/testDebugUnitTest/index.html
 
-5. Ejecutar la aplicación en dispositivo virtual o físico
+5. Generar APK firmada en modo release:
 
-6. Probar funcionalidades:
+./gradlew clean assembleRelease
+
+6. Ejecutar la aplicación en dispositivo virtual o físico
+
+7. Probar funcionalidades:
 
 - Registrarse o usar modo invitado
 
