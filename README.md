@@ -103,6 +103,77 @@ app/build/outputs/apk/release/app-release.apk
 
 ---
 
+## ☕  Spring Boot Microservicio
+
+* 📡 Backend Personalizado
+
+```text
+pasteleria-springboot-backend/
+├── 📦 Model/
+│   ├── ContactMessage.java              # Entidad MongoDB
+│   └── ContactMessageRequest.java       # DTO para recepción
+├── 🛠️ Service/
+│   └── ContactService.java              # Lógica de negocio
+├── 🌐 Controller/
+│   └── ContactController.java           # Endpoint REST
+├── 🔧 Config/
+│   └── CorsConfig.java                  # Configuración CORS
+└── 📄 application.properties            # Configuración MongoDB
+````
+---
+
+## 🔌 Endpoint Principal
+
+- POST http://localhost:8080/api/contact
+Content-Type: application/json
+
+```http
+{
+"name": "Juan Pérez",
+"email": "juan@example.com",
+"message": "Consulta sobre pasteles"
+}
+```
+
+---
+
+## 🍃 Base de Datos MongoDB
+
+- **Colección:** contact_messages
+
+- **Persistencia:** Mensajes de contacto con timestamp
+
+- **Backup:** Sistema híbrido con Firestore como fallback
+
+---
+
+## 🔄 Arquitectura Híbrida
+
+
+* En la app Android - Fallback automático
+
+```kotlin
+try {
+springBootService.sendMessage(contactRequest)  # ✅ Spring Boot primario
+} catch (e: Exception) {
+firestoreRepository.saveMessage(contactRequest) # 🔄 Firestore fallback  
+}
+```
+
+---
+
+## 🌐 Características del Backend
+
+* API REST con respuestas JSON estandarizadas
+
+* MongoDB Atlas - Base de datos en la nube
+
+* Configuración CORS para desarrollo local
+
+* Logging completo de solicitudes y respuestas
+
+* Validación de datos en el servidor
+
 ## 🎵 Funcionalidades Multimedia y APIs Externas
 
 **🎧 Integración Spotify** - WebView con playlist musical embebida
@@ -120,24 +191,80 @@ app/build/outputs/apk/release/app-release.apk
 
 ## 🏗 Arquitectura del Proyecto
 
+```text
 app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
-├── data/ 
-│   ├── api/ # Servicios de API (WeatherApiService, ApiClient)
-│   ├── local/ # Room Database y DAOs
-│   ├── model/ # Modelos de datos (Productos, CartLineUi, FirestoreOrder, WeatherResponse)
-│   └── repo/ # Patrón Repository
-├── viewmodel/ # ViewModels de la aplicación (Auth, Store, Cart, Contact, Weather)
-├── ui/
-│   ├── screens/ # Pantallas principales (Home, Login, Register, Catalog, Cart, Contact, QuienesSomos)
-│   ├── components/ # Componentes reutilizables (MilTopBar, MilBottomNav, ProductCard)
-│   ├── nav/ # Configuración de navegación (NavHost, Routes)
-│   └── theme/ # Tema de la aplicación (colores corporativos)
-├── test/ # 🧪 PRUEBAS UNITARIAS
-│ └── viewmodel/
-│   ├── AuthViewModelTest.kt 
-│   └── CartViewModelTest.kt
-└── MainActivity.kt # Actividad principal
+├── 📱 MainActivity.kt                    # Actividad principal y punto de entrada
+├── 🗂️ data/
+│   ├── 🌐 api/                           # Servicios de API y clientes
+│   │   ├── ApiClient.kt                  # Cliente base para APIs
+│   │   ├── SpringBootClient.kt           # Cliente específico para Spring Boot
+│   │   ├── SpringBootContactService.kt   # Servicio de contacto Spring Boot
+│   │   └── WeatherApiService.kt          # Servicio de datos meteorológicos
+│   ├── 💾 local/                         # Persistencia local con Room
+│   │   ├── MilSaboresDatabase.kt         # Base de datos principal
+│   │   ├── CartDao.kt                    # Operaciones del carrito
+│   │   ├── ProductDao.kt                 # Operaciones de productos
+│   │   └── UserDao.kt                    # Operaciones de usuarios
+│   ├── 📊 model/                         # Modelos de datos
+│   │   ├── 🛒 Cart/                      # Modelos relacionados al carrito
+│   │   │   ├── CartItem.kt               # Item individual del carrito
+│   │   │   └── CartLineUi.kt             # Modelo UI para línea del carrito
+│   │   ├── 🎂 Product/                   # Modelos de productos
+│   │   │   ├── Productos.kt              # Modelo principal de productos
+│   │   │   └── ProductoDTO.kt            # DTO para transferencia de datos
+│   │   ├── 👤 User/                      # Modelos de usuario
+│   │   │   └── User.kt                   # Modelo de usuario
+│   │   ├── 📨 Contact/                   # Modelos de contacto
+│   │   │   ├── ContactMessageRequest.kt  # Solicitud de mensaje de contacto
+│   │   │   └── ContactMessageResponse.kt # Respuesta de mensaje de contacto
+│   │   ├── ☁️ Weather/                   # Modelos meteorológicos
+│   │   │   └── WeatherResponse.kt        # Respuesta del servicio del clima
+│   │   └── 🚚 Order/                     # Modelos de pedidos
+│   │       └── FirestoreOrder.kt         # Pedido para Firestore
+│   ├── 🌐 network/                       # Configuración de red
+│   │   ├── client/
+│   │   │   └── RetrofitClient.kt         # Cliente Retrofit configurado
+│   │   └── api/
+│   │       └── ApiService.kt             # Servicios de API genéricos
+│   └── 🔄 repo/                          # Patrón Repository
+│       └── MilSaboresRepository.kt       # Repositorio principal
+├── 🎨 ui/
+│   ├── 🖼️ screens/                       # Pantallas de la aplicación
+│   │   ├── HomeScreen.kt                 # Pantalla de inicio
+│   │   ├── Auth/                         # Pantallas de autenticación
+│   │   │   ├── LoginScreen.kt            # Inicio de sesión
+│   │   │   └── RegisterScreen.kt         # Registro de usuario
+│   │   ├── 🛍️ CatalogScreen.kt           # Catálogo de productos
+│   │   ├── 🛒 CartScreen.kt              # Carrito de compras
+│   │   ├── 📞 ContactScreen.kt           # Formulario de contacto
+│   │   └── ℹ️ QuienesSomosScreen.kt      # Información sobre la pastelería
+│   ├── 🧩 components/                    # Componentes reutilizables
+│   │   ├── Navigation/
+│   │   │   ├── TopBar.kt                 # Barra superior personalizada
+│   │   │   └── BottomNav.kt              # Navegación inferior
+│   │   ├── Product/
+│   │   │   └── ProductCard.kt            # Tarjeta de producto
+│   │   └── HeroBanner.kt                 # Banner principal
+│   ├── 🧭 nav/                           # Navegación
+│   │   ├── NavHost.kt                    # Host de navegación principal
+│   │   └── Routes.kt                     # Definición de rutas
+│   └── 🎨 theme/                         # Sistema de diseño
+│       ├── Color.kt                      # Paleta de colores corporativos
+│       ├── Theme.kt                      # Tema principal de la app
+│       └── Type.kt                       # Tipografía
+├── 🧠 viewmodel/                         # ViewModels (Patrón MVVM)
+│   ├── AuthViewModel.kt                  # Autenticación y gestión de usuarios
+│   ├── StoreViewModel.kt                 # Gestión de productos y tienda
+│   ├── CartViewModel.kt                  # Estado y operaciones del carrito
+│   ├── ContactViewModel.kt               # Gestión de formularios de contacto
+│   ├── WeatherViewModel.kt               # Datos meteorológicos
+│   └── MainViewModel.kt                  # Estado general de la aplicación
+└── 🧪 test/                              # Pruebas unitarias
+    └── viewmodel/
+        ├── AuthViewModelTest.kt          # Pruebas de autenticación
+        └── CartViewModelTest.kt          # Pruebas del carrito
+````
 
 ---
 
@@ -506,7 +633,9 @@ app/build/reports/tests/testDebugUnitTest/index.html
 ## 👥 Integrantes del Proyecto
 
 **Matías Suazo** - Desarrollo móvil & experiencia de usuario
-Enfocado en crear una interfaz intuitiva y funcional que haga la experiencia de compra tan dulce como nuestros productos. Implementación completa de frontend, autenticación, carrito de compras y sistema de contacto.
+
+- Enfocado en crear una interfaz intuitiva y funcional que haga la experiencia de compra tan dulce como nuestros productos. Implementación completa de frontend, autenticación, carrito de compras y sistema de contacto.
 
 **Álvaro Chávez** - Backend & desarrollo web y Testeos
-Responsable de la infraestructura que soporta nuestra aplicación y la experiencia web complementaria, además de los testeos en la aplicación
+
+- Responsable de la infraestructura que soporta nuestra aplicación y la experiencia web complementaria, además de los testeos en la aplicación
