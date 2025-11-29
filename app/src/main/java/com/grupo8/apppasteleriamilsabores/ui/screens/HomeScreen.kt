@@ -1,7 +1,10 @@
 package com.grupo8.apppasteleriamilsabores.ui.screens
 
 import android.content.Intent
-import android.net.Uri
+import android.util.Log
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -17,8 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.grupo8.apppasteleriamilsabores.data.model.Productos
 import com.grupo8.apppasteleriamilsabores.ui.components.MilBottomNav
@@ -29,32 +31,130 @@ import com.grupo8.apppasteleriamilsabores.viewmodel.WeatherViewModel
 import com.grupo8.apppasteleriamilsabores.viewmodel.WeatherState
 import kotlinx.coroutines.delay
 
-// WebView para mostrar la playlist de Spotify embebida
+// WebView final sin warnings
 @Composable
 fun SpotifyEmbed() {
-    AndroidView(
-        factory = { context ->
-            WebView(context).apply {
-                webViewClient = WebViewClient()
-                settings.javaScriptEnabled = true
-                settings.domStorageEnabled = true
-                settings.mediaPlaybackRequiresUserGesture = false
-                loadUrl("https://open.spotify.com/embed/playlist/7HYoc4lo87o4JoBSOgdsBM?utm_source=generator")
+    var webViewFailed by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(true) }
+
+    if (webViewFailed) {
+        FallbackSpotifyUI()
+    } else {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+        ) {
+            AndroidView(
+                factory = { context ->
+                    WebView(context).apply {
+                        webViewClient = object : WebViewClient() {
+                            override fun onPageFinished(view: WebView?, url: String?) {
+                                isLoading = false
+                            }
+
+                            @Suppress("DEPRECATION", "OverridingDeprecatedMember")
+                            override fun onReceivedError(
+                                view: WebView?,
+                                errorCode: Int,
+                                description: String?,
+                                failingUrl: String?
+                            ) {
+                                webViewFailed = true
+                                isLoading = false
+                                Log.d("WebView", "WebView error: $errorCode")
+                            }
+                        }
+                        // JavaScript necesario para Spotify embed (seguro en este contexto)
+                        @Suppress("SetJavaScriptEnabled")
+                        settings.javaScriptEnabled = true
+                        settings.domStorageEnabled = true
+                        settings.mediaPlaybackRequiresUserGesture = false
+
+                        loadUrl("https://open.spotify.com/embed/playlist/7HYoc4lo87o4JoBSOgdsBM?utm_source=generator")
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+            )
+
+            if (isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surface),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
-        },
+        }
+    }
+}
+
+// UI de fallback elegante
+@Composable
+fun FallbackSpotifyUI() {
+    val context = LocalContext.current
+
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp)
-    )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    "🎵 Playlist Musical",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    "Disfruta nuestra playlist en Spotify",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            Button(
+                onClick = {
+                    openSpotifyPlaylist(context)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF1DB954),
+                    contentColor = Color.White
+                ),
+                modifier = Modifier.height(40.dp)
+            ) {
+                Text("Abrir")
+            }
+        }
+    }
 }
 
-// Función para abrir Spotify en la app o navegador
+// Función optimizada sin warnings
 private fun openSpotifyPlaylist(context: android.content.Context) {
     try {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("spotify:playlist:7HYoc4lo87o4JoBSOgdsBM"))
+        val intent = Intent(Intent.ACTION_VIEW, "spotify:playlist:7HYoc4lo87o4JoBSOgdsBM".toUri())
         context.startActivity(intent)
-    } catch (e: Exception) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://open.spotify.com/playlist/7HYoc4lo87o4JoBSOgdsBM"))
+    } catch (_: Exception) {
+        // Fallback a versión web (ignoramos la excepción específica)
+        val intent = Intent(Intent.ACTION_VIEW, "https://open.spotify.com/playlist/7HYoc4lo87o4JoBSOgdsBM".toUri())
         context.startActivity(intent)
     }
 }
@@ -79,7 +179,7 @@ fun HomeScreen(
     var showWelcomeToast by remember { mutableStateOf(false) }
     var showUpgradePrompt by remember { mutableStateOf(false) }
 
-    // ViewModel para el clima de Viña del Mar - Integración con API externa
+    // ViewModel para el clima
     val weatherVm: WeatherViewModel = viewModel()
     val weatherState by weatherVm.weatherState.collectAsState()
 
@@ -123,7 +223,7 @@ fun HomeScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Top
             ) {
-                // Tarjeta del clima - Integración con API externa OpenWeatherMap
+                // Tarjeta del clima
                 Card(
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.tertiaryContainer,
@@ -143,7 +243,6 @@ fun HomeScreen(
                         )
                         Spacer(Modifier.height(8.dp))
 
-                        // Manejo de estados para la carga del clima
                         when (weatherState) {
                             is WeatherState.Loading -> {
                                 Text("Cargando clima...")
@@ -284,7 +383,7 @@ fun HomeScreen(
                     }
                 }
 
-                // Sección de productos destacados del mes
+                // Sección de productos destacados
                 Text(
                     "Productos destacados del mes",
                     style = MaterialTheme.typography.headlineSmall
@@ -325,7 +424,7 @@ fun HomeScreen(
 
                 Spacer(Modifier.height(24.dp))
 
-                // Sección de playlist musical con Spotify
+                // Sección de playlist musical
                 Text(
                     "🎵 Playlist del Mes",
                     style = MaterialTheme.typography.headlineSmall
@@ -341,7 +440,6 @@ fun HomeScreen(
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp)
@@ -368,7 +466,7 @@ fun HomeScreen(
                                 contentColor = Color.White
                             )
                         ) {
-                            Text("🎵 Abrir en la página de Spotify")
+                            Text("🎵 Abrir en Spotify")
                         }
 
                         Spacer(Modifier.height(8.dp))
@@ -396,7 +494,7 @@ fun HomeScreen(
                 Spacer(Modifier.height(32.dp))
             }
 
-            // Diálogo para promocionar registro a usuarios invitados
+            // Diálogo para promocionar registro
             if (showUpgradePrompt) {
                 AlertDialog(
                     onDismissRequest = { showUpgradePrompt = false },
@@ -438,7 +536,7 @@ fun HomeScreen(
                 )
             }
 
-            // Toast de bienvenida para usuarios invitados
+            // Toast de bienvenida
             if (showWelcomeToast) {
                 Box(
                     modifier = Modifier
