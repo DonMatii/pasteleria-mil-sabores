@@ -79,6 +79,8 @@ app/build/outputs/apk/release/app-release.apk
 
 - APK de salida: app-release.apk lista para distribución
 
+---
+
 ## 🛠 Tecnologías Implementadas
 
 * Lenguaje de programación: Kotlin
@@ -94,6 +96,13 @@ app/build/outputs/apk/release/app-release.apk
 * Consumo de APIs: Retrofit + Gson
 * APIs externas: Spotify Embed API + OpenWeatherMap API
 
+### 🔄 Integración Backend
+- **Spring Boot Microservicio** - Backend personalizado con MongoDB
+- **Arquitectura Híbrida** - Firebase + Spring Boot con fallback automático
+- **Comunicación HTTP** - Retrofit + CLEARTEXT para desarrollo
+
+---
+
 ## 🎵 Funcionalidades Multimedia y APIs Externas
 
 **🎧 Integración Spotify** - WebView con playlist musical embebida
@@ -107,7 +116,10 @@ app/build/outputs/apk/release/app-release.apk
 
 **🎨 Mejoras Visuales** - Ajustes de interfaz y experiencia de usuario mejorada
 
-🏗 Arquitectura del Proyecto
+---
+
+## 🏗 Arquitectura del Proyecto
+
 app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 ├── data/ 
@@ -126,6 +138,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 │   ├── AuthViewModelTest.kt 
 │   └── CartViewModelTest.kt
 └── MainActivity.kt # Actividad principal
+
+---
 
 # ⚡ Funcionalidades Principales
 
@@ -149,6 +163,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 **🌤️ API Clima en tiempo real** - Integración con OpenWeatherMap para Viña del Mar
 
+---
+
 # 📦 Gestión de Productos
 
 **Catálogo completo de productos** con grid responsivo
@@ -162,6 +178,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 **Agregar al carrito** con un solo clic
 
 **Vista previa en Home** sin funcionalidad de compra directa
+
+---
 
 # 🛒 Sistema de Compras Real
 
@@ -181,6 +199,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 **🔒 Protección de compras** solo para usuarios autenticados
 
+---
+
 # 🔄 Gestión de Cantidades en Carrito
 
 **Botón +** para aumentar cantidad de productos
@@ -195,6 +215,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 **Sincronización con UI** mediante StateFlows
 
+---
+
 # 🔐 Control de Autenticación para Compras
 
 **Verificación automática** de estado de autenticación
@@ -207,6 +229,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 **Protección en navegación** para rutas sensibles
 
+---
+
 # 📞 Sistema de Contacto
 
 **📝 Formulario completo** (nombre, apellido, correo, mensaje)
@@ -218,6 +242,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 **🎉 Confirmación visual** al usuario después del envío
 
 **📧 Respuesta prometida** al correo del usuario
+
+---
 
 # 🎨 Experiencia de Usuario
 
@@ -236,6 +262,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 **🏠 Home intuitivo** con productos destacados y redirección al catálogo
 
 **🛒 Carrito mejorado** con controles de cantidad fáciles de usar
+
+---
 
 ## 🧪 Suite de Pruebas Unitarias
 
@@ -261,6 +289,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 **✅ Cantidad por defecto al agregar productos**
 
+---
+
 ## 🔄 Flujos de Autenticación
 
 **Autenticación tradicional:** Email y contraseña con Firebase Auth
@@ -272,6 +302,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 **Gestión de sesiones:** Logout y cambio entre usuarios
 
 **Control de acceso:** Verificación para funcionalidades de compra
+
+---
 
 ## ✅ Validaciones Implementadas
 
@@ -287,6 +319,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 
 **Control de autenticación** para procesos de compra
 
+---
+
 ## 📊 Gestión de Estado
 
 **La aplicación utiliza ViewModels para la gestión del estado:**
@@ -298,6 +332,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 **CartViewModel:** Administra el estado del carrito de compras y procesamiento de órdenes
 
 **ContactViewModel:** Gestiona el envío y almacenamiento de mensajes de contacto
+
+---
 
 ## 🗄️ Persistencia de Datos
 
@@ -316,6 +352,8 @@ app/src/main/java/com/grupo8/apppasteleriamilsabores/
 - Registro y login de usuarios
 - Sesiones persistentes
 - Modo invitado anónimo
+
+---
 
 ## 🚀 Instrucciones de Ejecución
 
@@ -353,6 +391,8 @@ app/build/reports/tests/testDebugUnitTest/index.html
 - Finalizar compra (ver órdenes en Firebase Console)
 
 - Enviar mensaje de contacto (ver mensajes en Firebase Console)
+
+---
 
 ## 📈 Historial de Desarrollo
 
@@ -395,6 +435,8 @@ app/build/reports/tests/testDebugUnitTest/index.html
 ✅ Generación de APK release funcional
 ✅ Documentación de proceso de build
 
+---
+
 ## 🔄 Próximos Objetivos
 
 🚀 **PARA ENTREGA FINAL - COMPLETADO ✅**
@@ -409,12 +451,16 @@ app/build/reports/tests/testDebugUnitTest/index.html
 
 - **Contexto definido** - ✅ Solución real para pastelería
 
+---
+
 ## 🔒 Seguridad y Configuración
 
 ### Archivos Excluidos (.gitignore):
 - Keystores y archivos de firma (`*.jks`, `*.keystore`)
 - Archivos de configuración sensible
 - APKs generadas en build/
+
+---
 
 ## 🏗 Dependencias Principales
 
@@ -455,10 +501,12 @@ app/build/reports/tests/testDebugUnitTest/index.html
   testImplementation("androidx.arch.core:core-testing:2.2.0")
   testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
+---
+
 ## 👥 Integrantes del Proyecto
 
 **Matías Suazo** - Desarrollo móvil & experiencia de usuario
 Enfocado en crear una interfaz intuitiva y funcional que haga la experiencia de compra tan dulce como nuestros productos. Implementación completa de frontend, autenticación, carrito de compras y sistema de contacto.
 
-**Álvaro Chávez** - Backend & desarrollo web
-Responsable de la infraestructura que soporta nuestra aplicación y la experiencia web complementaria.
+**Álvaro Chávez** - Backend & desarrollo web y Testeos
+Responsable de la infraestructura que soporta nuestra aplicación y la experiencia web complementaria, además de los testeos en la aplicación
