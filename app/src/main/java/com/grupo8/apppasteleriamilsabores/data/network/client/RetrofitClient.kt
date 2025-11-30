@@ -9,8 +9,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
-    // URL temporal - cambia esto por la URL de AWS cuando la tengas
-    private const val BASE_URL = "https://jsonplaceholder.typicode.com/"
+    // URL de conexión a ngrok para Mongo Atlas y SpringBoot
+    private const val BASE_URL = "https://watchful-terresa-gnostically.ngrok-free.dev/api/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

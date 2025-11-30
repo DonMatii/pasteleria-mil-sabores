@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.grupo8.apppasteleriamilsabores.data.api.SpringBootClient
+import com.grupo8.apppasteleriamilsabores.data.api.ContactRetrofitClient
 import com.grupo8.apppasteleriamilsabores.data.model.springboot.ContactMessageRequest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -58,8 +58,7 @@ class ContactViewModel : ViewModel() {
                 mensaje = mensaje
             )
 
-            // Enviar al microservicio
-            val response = SpringBootClient.contactService.enviarMensaje(contactMessage)
+            val response = ContactRetrofitClient.contactService.enviarMensaje(contactMessage)
 
             // Verificar si fue exitoso
             response.isSuccessful && response.body()?.status == "success"
