@@ -1,27 +1,14 @@
-## 🍰 App Pastelería Mil Sabores - Grupo 8
-
-Aplicación móvil desarrollada en Android para la gestión y visualización de productos de pastelería. Proyecto correspondiente a la Evaluación final y examen de Desarrollo de Aplicaciones Móviles.
-
----
+# 🍰 App Pastelería Mil Sabores - Grupo 8
 
 ## 📋 Descripción del Proyecto
+Aplicación móvil desarrollada en Android para la gestión y visualización de productos de pastelería. Proyecto correspondiente a la Evaluación final y examen de Desarrollo de Aplicaciones Móviles.
+
 Solución móvil integral para la pastelería "Mil Sabores" que permite a los usuarios explorar el catálogo de productos, gestionar un carrito de compras, realizar pedidos reales y contactar con la pastelería mediante sistema de autenticación seguro.
 
 ---
 
 ## 🎯 Contexto del Proyecto (EFT)
-
-Este proyecto corresponde a la **Evaluación Final Transversal (EFT) y examen** del curso **Desarrollo de Aplicaciones Móviles**.  
-La aplicación refleja el trabajo acumulado del semestre y cumple con los criterios solicitados:
-
-- Diseño visual estructurado y navegación jerárquica.
-- Formularios validados con retroalimentación clara por campo.
-- Gestión de estado y separación de lógica e interfaz (MVVM).
-- Animaciones funcionales y respuesta dinámica a la interacción.
-- Consumo de APIs externas y uso de recursos nativos.
-- Pruebas unitarias completas.
-- Generación de APK firmado en modo release.
-- Documentación técnica detallada.
+Este proyecto corresponde a la **Evaluación Final Transversal (EFT) y examen** del curso **Desarrollo de Aplicaciones Móviles**.
 
 ---
 
@@ -31,7 +18,9 @@ La aplicación refleja el trabajo acumulado del semestre y cumple con los criter
 **✅ Código Optimizado - Corrección de warnings y mejoras de calidad**  
 **✅ Suite de Testing Profesional - Configuración con Mockito y Corrutinas**  
 **✅ Sistema de Compras Real - Órdenes guardadas en Firestore**  
-**✅ Sistema de Contacto Funcional - Mensajes en Firestore**  
+**✅ Sistema de Contacto Avanzado -MongoDB Atlas + Firebase**  
+**✅ Backend Spring Boot - Microservicio personalizado funcionando**  
+**✅ Comunicación Ngrok - URL pública para desarrollo**  
 **✅ Controles de Cantidad en Carrito - Botones +/- funcionales**  
 **✅ Control de Autenticación - Solo usuarios autenticados pueden comprar**  
 **✅ Experiencia de Usuario Mejorada - Navegación intuitiva entre pantallas**  
@@ -41,15 +30,12 @@ La aplicación refleja el trabajo acumulado del semestre y cumple con los criter
 
 ## 📊 Métricas de Calidad
 
-- **11 pruebas unitarias ejecutadas**
-
-- **0 fallas - 100% de éxito**
-
+- **11 pruebas unitarias ejecutadas - 0 fallas - 100% de éxito**
 - **Cobertura: AuthViewModel + CartViewModel**
-
-- **Persistencia real: Órdenes y mensajes en Firestore**
-
-- **Consumo de APIs externas: Spotify WebView + OpenWeatherMap**
+- **Persistencia real: Órdenes en Firestore + Mensajes en MongoDB Atlas**
+- **Consumo de APIs externas: Spotify WebView + OpenWeatherMap + Spring Boot**
+- **Arquitectura completa: App → Ngrok → Spring Boot → MongoDB Atlas**
+- **Sistema híbrido: MongoDB Atlas (primario) + Firebase (backup)**
 
 ---
 
@@ -125,7 +111,7 @@ pasteleria-springboot-backend/
 ## 🔌 Endpoint Principal
 
 - POST http://localhost:8080/api/contact
-Content-Type: application/json
+  Content-Type: application/json
 
 ```http
 {
@@ -134,6 +120,62 @@ Content-Type: application/json
 "message": "Consulta sobre pasteles"
 }
 ```
+
+---
+
+## 🚀 Nueva Funcionalidad: Backend Spring Boot con MongoDB Atlas
+
+- 🔗 Comunicación App → Spring Boot → MongoDB Atlas**
+
+---
+
+## 📐 Arquitectura implementada
+
+**📱 App Android → 🌐 Ngrok → 🖥️ Spring Boot → ☁️ MongoDB Atlas**
+
+---
+
+## 🔌 Endpoint en Producción (Ngrok + Atlas)
+
+- POST https://watchful-terresa-gnostically.ngrok-free.dev/api/contacto Content-Type: application/json
+
+```http
+{
+"nombre": "Usuario Ejemplo",
+"apellido": "Apellido",
+"correo": "usuario@ejemplo.com",
+"mensaje": "Mensaje de contacto"
+}
+```
+
+**Respuesta:**
+
+```json
+{
+"status": "success",
+"message": "Mensaje de contacto recibido correctamente"
+}
+```
+
+---
+
+## 🗄️ Bases de Datos Implementadas
+
+*MongoDB Atlas (Primaria)*
+
+- **Cluster:** PasteleriaMilSaboresAndroidBackEndSpringBoot
+
+- **Base de datos:** pasteleria_contactos
+
+- **Colección:** contacto
+
+- **Región:** AWS São Paulo (sa-east-1)
+
+- **Propósito:** Mensajes de contacto principales
+
+- **Firebase Firestore (Backup) Colección:** contact_messages
+
+- **Propósito:** Fallback automático y datos en tiempo real
 
 ---
 
@@ -147,17 +189,39 @@ Content-Type: application/json
 
 ---
 
-## 🔄 Arquitectura Híbrida
-
+## 📊 Sistema Híbrido Mejorado
 
 * En la app Android - Fallback automático
 
 ```kotlin
-try {
-springBootService.sendMessage(contactRequest)  # ✅ Spring Boot primario
-} catch (e: Exception) {
-firestoreRepository.saveMessage(contactRequest) # 🔄 Firestore fallback  
+// En ContactViewModel.kt - Arquitectura robusta
+fun sendContactMessage() {
+    viewModelScope.launch {
+        // 1️⃣ PRIMARIO: Spring Boot + MongoDB Atlas
+        val springBootSuccess = trySendToSpringBoot()
+
+        if (springBootSuccess) {
+            println("✅ Mensaje guardado en MongoDB Atlas")
+        } else {
+            // 2️⃣ FALLBACK: Firebase Firestore
+            trySendToFirestore()
+            println("✅ Mensaje guardado en Firestore (fallback)")
+        }
+    }
 }
+```
+
+---
+
+## 🌐 Configuración Ngrok para Desarrollo
+
+```kotlin
+// En RetrofitClient.kt
+private const val BASE_URL = "https://watchful-terresa-gnostically.ngrok-free.dev/api/"
+
+// En SpringBootContactService.kt  
+@POST("contacto")
+suspend fun enviarMensaje(@Body message: ContactMessageRequest): Response<ContactMessageResponse>
 ```
 
 ---
@@ -523,44 +587,61 @@ app/build/reports/tests/testDebugUnitTest/index.html
 
 ## 📈 Historial de Desarrollo
 
-**Fase 1 - Base y Autenticación**
-✅ Sistema de autenticación completo con Firebase Auth
-✅ Navegación entre pantallas con Navigation Component  
-✅ Pruebas unitarias para ViewModels principales
 
-**Fase 2 - Catálogo y Carrito**
-✅ Catálogo de productos con Room Database
-✅ Carrito de compras funcional con gestión completa
-✅ UI/UX profesional con Material Design 3
+1. **Base y Autenticación**
 
-**Fase 3 - Persistencia Real**
-✅ Integración con Firebase Firestore
-✅ Sistema de órdenes reales guardadas en la nube
-✅ Formulario de contacto con persistencia en Firestore
-✅ Colores corporativos aplicados consistentemente
+- ✅ Sistema de autenticación completo con Firebase Auth
+- ✅ Navegación entre pantallas con Navigation Component  
+- ✅ Pruebas unitarias para ViewModels principales
 
-**Fase 4 - Mejoras de UX y Control**
-✅ Controles de cantidad en carrito con botones +/-
-✅ Protección de compras para usuarios autenticados
-✅ Mejora en navegación entre Home y Catálogo
-✅ Optimización de interfaz de usuario
+2. **Catálogo y Carrito**
 
-**Fase 5 - Multimedia y Experiencia Completa**
-✅ Integración WebView de Spotify con playlist musical
-✅ Nueva pantalla "Quienes Somos" con información del equipo
-✅ Mejoras visuales en múltiples componentes de interfaz
-✅ Navegación expandida a 7 pantallas principales
+- ✅ Catálogo de productos con Room Database
+- ✅ Carrito de compras funcional con gestión completa
+- ✅ UI/UX profesional con Material Design 3
 
-**Fase 6 - APIs Externas y Consumo de Datos**
-✅ Integración API OpenWeatherMap para clima en tiempo real
-✅ Configuración Retrofit + Gson para consumo de APIs REST
-✅ Implementación ViewModel para gestión de estado del clima
-✅ Tarjeta informativa del clima en pantalla principal
+3. **Persistencia Real**
 
-**Fase 7 - APK Firmada y Release**
-✅ Configuración de firma automatizada en build.gradle.kts
-✅ Generación de APK release funcional
-✅ Documentación de proceso de build
+- ✅ Integración con Firebase Firestore
+- ✅ Sistema de órdenes reales guardadas en la nube
+- ✅ Formulario de contacto con persistencia en Firestore
+- ✅ Colores corporativos aplicados consistentemente
+
+4. **Mejoras de UX y Control**
+
+- ✅ Controles de cantidad en carrito con botones +/-
+- ✅ Protección de compras para usuarios autenticados
+- ✅ Mejora en navegación entre Home y Catálogo
+- ✅ Optimización de interfaz de usuario
+
+5. **Multimedia y Experiencia Completa**
+
+- ✅ Integración WebView de Spotify con playlist musical
+- ✅ Nueva pantalla "Quienes Somos" con información del equipo
+- ✅ Mejoras visuales en múltiples componentes de interfaz
+- ✅ Navegación expandida a 7 pantallas principales
+
+6. **APIs Externas y Consumo de Datos**
+
+- ✅ Integración API OpenWeatherMap para clima en tiempo real
+- ✅ Configuración Retrofit + Gson para consumo de APIs REST
+- ✅ Implementación ViewModel para gestión de estado del clima
+- ✅ Tarjeta informativa del clima en pantalla principal
+
+7. **APK Firmada y Release**
+
+- ✅ Configuración de firma automatizada en build.gradle.kts
+- ✅ Generación de APK release funcional
+- ✅ Documentación de proceso de build
+
+8. **Backend Spring Boot y MongoDB Atlas**
+
+- ✅ Implementación microservicio Spring Boot personalizado
+- ✅ Conexión a MongoDB Atlas en la nube  
+- ✅ Configuración Ngrok para URL pública
+- ✅ Sistema híbrido MongoDB Atlas + Firebase
+- ✅ Comunicación end-to-end funcionando
+- ✅ Mensajes guardándose en ambas bases de datos
 
 ---
 
@@ -632,10 +713,12 @@ app/build/reports/tests/testDebugUnitTest/index.html
 
 ## 👥 Integrantes del Proyecto
 
-**Matías Suazo** - Desarrollo móvil & experiencia de usuario
+**👨‍💻 Matías Suazo** — Desarrollo móvil & experiencia de usuario
 
-- Enfocado en crear una interfaz intuitiva y funcional que haga la experiencia de compra tan dulce como nuestros productos. Implementación completa de frontend, autenticación, carrito de compras y sistema de contacto.
+- Enfocado en crear una interfaz intuitiva y funcional que haga la experiencia de compra tan dulce como nuestros productos.
+- Implementación completa de frontend, autenticación, carrito de compras y sistema de contacto.
 
-**Álvaro Chávez** - Backend & desarrollo web y Testeos
+**🖥️ Álvaro Chávez** — Backend & desarrollo web y Testeos
 
-- Responsable de la infraestructura que soporta nuestra aplicación y la experiencia web complementaria, además de los testeos en la aplicación
+- Responsable de la infraestructura que soporta nuestra aplicación y la experiencia web complementaria.
+- Encargado además de los testeos en la aplicación.  
